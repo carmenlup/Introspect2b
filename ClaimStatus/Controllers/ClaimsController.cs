@@ -31,8 +31,8 @@ public class ClaimsController : ControllerBase
         _logger.LogInformation("GetClaim method invoked with ID: {Id}", id);
         if (id <= 0)
         {
-            _logger.LogWarning("Claim Id should have a positive value. Please provide a value grater than zero");
-            return BadRequest("Invalid Id claim data provided.");
+            _logger.LogWarning("Claim Id should have a valid value. Please provide an integer value grater than zero");
+            return BadRequest("Invalid Id Claim provided.");
         }
 
         var claimsFilePath = Path.Combine(_solPath, "mocks", "claims.json");
@@ -72,8 +72,8 @@ public class ClaimsController : ControllerBase
 
         if (id <= 0)
         {
-            _logger.LogWarning($"Invalid claim data provided: {id}");
-            return BadRequest("Invalid claim data provided.");
+            _logger.LogWarning($"Invalid claim id provided: {id}");
+            return BadRequest($"Invalid claim id provided: {id}");
         }
 
         var notesFilePath = Path.Combine(_solPath, "mocks", "notes.json");

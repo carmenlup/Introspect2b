@@ -183,12 +183,10 @@ Response type:
   "recommendation": "Recommendation: Please provide the claim notes for summarization and further recommendations."
 }
 ```
-2. 500 Internal Server Error - If there is an error during the summary generation, it returns a 500 Internal Server Error response.
-3. 400 Bad Request - If claim id is not valid. Should be a positive value
+3. 404 Not Found - If the mock data is missing
 ```
-Invalid claim Id data provided.
+Notes data not found for Claim Id 1. Check if notes.exist to path: C:\Introspect2b\mocks\notes.json
 ```
-4. 200 OK - 
 
 
 ### 6. Add Swagger for API documentation and testing.
@@ -233,14 +231,14 @@ app.Run();
 ### 7. Test implementation on local machine
 - Set `ClaimStatus` as the startup project in Visual Studio.
 - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
-![SwaggerUI](Images/SwaggerUI.jpg "Swagger UI")
+![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
 
 ## Containerization and run Claims without 
   
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.
-Open a terminal under solution folder and navigate to the project directory (src/ClaimStatus). The following steps will guide you through the containerization process:
+Open a terminal under solution folder and navigate to the project directory (ClaimStatus). The following steps will guide you through the containerization process:
 
 ##### 1. Build Immage
 ```powershell
@@ -249,7 +247,7 @@ docker build -t claimstatus:latest .
 
 ##### 2. Create  Self-Signed Certificate
 ```powershell
-dotnet dev-certs https -t -ep "%USERPROFILE%\.aspnet\https\productservice.pfx" -p runapifromdocker
+dotnet dev-certs https -t -ep "$($env:USERPROFILE)\.aspnet\https\localdockercert.pfx" -p runapifromdocker
 ```
 ##### 3. Trust the certificate on your local machine
 ```powershell
@@ -259,30 +257,18 @@ dotnet dev-certs https --trust
 ##### 4. Run the Container
 
 ```powershell
-docker run -it --rm -p 8081:8081 `
-  -e "ASPNETCORE_URLS=https://+:8081;http://+:8080" `
-  -e "ASPNETCORE_HTTPS_PORTS=8081" `
-  -e "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/productservice.pfx" `
+docker run -it --rm -p 8030:8030 -p 8031:8031 `
+  -e "ASPNETCORE_URLS=https://+:8031;http://+:8030" `
+  -e "ASPNETCORE_HTTPS_PORTS=8031" `
+  -e "ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localdockercert.pfx" `
   -e "ASPNETCORE_Kestrel__Certificates__Default__Password=runapifromdocker" `
-  -v "${HOME}\.aspnet\https\productservice.pfx:/https/productservice.pfx" `
-  productservice
+  -v "${HOME}\.aspnet\https\localdockercert.pfx:/https/localdockercert.pfx" `
+  claimstatus:latest
 ```
 
 ### Accessing the Order Service
 You can access the Order Service API at the following URL:
 ```
-https://localhost:8021/swagger/index.html
-http://localhost:8020/swagger/index.html
+https://localhost:8031/swagger/index.html
+http://localhost:8030/swagger/index.html
 ```
-## Local Run OrderService With Dapr
-Open a terminal under solution folder and navigate to the OrderService project directory. 
-Run the following command to start un the OrderService with Dapr:
-```powershell
-dapr run --app-id orderservice --app-port 5146 --components-path "../dapr/components" -- dotnet run
-```
-## Accessing the Product Service with Dapr
-You can use Swagger UI to test the ProductService API endpoints. Open your web browser and navigate to:
-```
-https://localhost:5146/swagger/index.html
-```
-

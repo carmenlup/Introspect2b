@@ -45,7 +45,6 @@
         "ASPNETCORE_HTTPS_PORTS": "8031",
         "ASPNETCORE_HTTP_PORTS": "8030"
       },
-      //"applicationUrl": "http://0.0.0.0:8030;https://0.0.0.0:8031",
       "publishAllPorts": true,
       "useSSL": true
     }
