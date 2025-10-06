@@ -1,0 +1,44 @@
+{
+  "Claims": [
+    {
+      "Id": 1,
+      "PolicyNumber": "PN123456",
+      "ClaimantName": "John Doe",
+      "Status": "Pending Review",
+      "DateFiled": "2023-10-01T10:15:30",
+      "Amount": 1500.00
+    },
+    {
+      "Id": 2,
+      "PolicyNumber": "PN654321",
+      "ClaimantName": "Jane Smith",
+      "Status": "Approved",
+      "DateFiled": "2023-09-15T14:45:20",
+      "Amount": 2500.00
+    },
+    {
+      "Id": 3,
+      "PolicyNumber": "PN789012",
+      "ClaimantName": "Alice Johnson",
+      "Status": "Rejected",
+      "DateFiled": "2023-08-20T08:30:45",
+      "Amount": 3000.00
+    },
+    {
+      "Id": 4,
+      "PolicyNumber": "PN345678",
+      "ClaimantName": "Bob Brown",
+      "Status": "Approved",
+      "DateFiled": "2023-07-10T16:20:10",
+      "Amount": 1200.00
+    },
+    {
+      "Id": 5,
+      "PolicyNumber": "PN901234",
+      "ClaimantName": "Charlie Davis",
+      "Status": "Pending Review",
+      "DateFiled": "2023-10-05T09:50:55",
+      "Amount": 1800.00
+    }
+  ]
+}

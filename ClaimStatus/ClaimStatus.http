@@ -1,0 +1,6 @@
+@ClaimStatus_HostAddress = http://localhost:5261
+
+GET {{ClaimStatus_HostAddress}}/calims/
+Accept: application/json
+
+###

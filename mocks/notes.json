@@ -1,0 +1,46 @@
+﻿{
+  "Notes": [
+    {
+      "Id": 1,
+      "ClaimId": 1,
+      "Content": "The claimant provided all necessary documents. The claim is under review.",
+      "CreatedDate": "2023-10-02T09:15:30"
+    },
+    {
+      "Id": 2,
+      "ClaimId": 1,
+      "Content": "Additional information requested from the claimant regarding the incident details.",
+      "CreatedDate": "2023-10-03T14:45:20"
+    },
+    {
+      "Id": 3,
+      "ClaimId": 2,
+      "Content": "The claim was submitted and is pending initial review.",
+      "CreatedDate": "2023-09-15T10:00:00"
+    },
+    {
+      "Id": 4,
+      "ClaimId": 2,
+      "Content": "Initial review completed. Additional documents requested from the claimant.",
+      "CreatedDate": "2023-09-16T11:30:00"
+    },
+    {
+      "Id": 5,
+      "ClaimId": 2,
+      "Content": "The claimant provided the requested documents. Verification process started.",
+      "CreatedDate": "2023-09-18T14:20:00"
+    },
+    {
+      "Id": 6,
+      "ClaimId": 2,
+      "Content": "Verification completed. Claim moved to final approval stage.",
+      "CreatedDate": "2023-09-19T16:45:00"
+    },
+    {
+      "Id": 7,
+      "ClaimId": 2,
+      "Content": "The claim was approved after verifying all required documents.",
+      "CreatedDate": "2023-09-20T11:30:45"
+    }
+  ]
+}
