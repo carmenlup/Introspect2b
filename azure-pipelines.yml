@@ -1,0 +1,29 @@
+   trigger:
+     branches:
+       include:
+         - main  # Trigger pipeline on changes to the main branch
+
+   pool:
+     vmImage: ubuntu-latest
+
+   steps:
+   - task: UseDotNet@2
+     inputs:
+       packageType: 'sdk'
+       version: '6.x'  # Specify your .NET version
+       installationPath: $(Agent.ToolsDirectory)/dotnet
+
+   - script: dotnet build
+     displayName: 'Build the project'
+
+   - script: dotnet test
+     displayName: 'Run unit tests'
+
+   - task: Docker@2
+     inputs:
+       containerRegistry: '<Your ACR Service Connection>'
+       repository: '<Your ACR Repository>'
+       command: 'buildAndPush'
+       Dockerfile: '**/Dockerfile'
+       tags: '$(Build.BuildId)'
+   
