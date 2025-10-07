@@ -1,4 +1,4 @@
-# General considerations
+﻿# General considerations
 Deploy a Claim Status API in Azure Container Apps (ACA) by API Management
 (APIM). Implement: GET /claims/{id} (status) and POST /claims/{id}/summarize (calls Azure
 OpenAI to return a summary from mock notes). Secure and automate via Azure DevOps
@@ -16,14 +16,48 @@ The solution implements a modern cloud-native architecture with the following co
 
 # Introspect1B Solution overview
 ### Project Structure
-- ClaimStatus/ � service source + Dockerfile.
-- mocks/claims.json, mocks/notes.json (5�8 claim records; 3�4 notes blobs).
-- apim/ � APIM policy files or export.
-- iac/ � Bicep/Terraform templates.
-- pipelines/azure-pipelines.yml � Azure DevOps pipeline.
-- scans/ � link/screenshots to Defender findings
-- observability/ � saved KQL queries and sample screenshots.
-- README.md � instructions, GenAI prompts used, how to run/tests.
+Introspect2b							# Solution folder
+├── ClaimStatus (Project)				# Main project containing the API implementation
+│   ├── Controllers						# Contains API controllers for handling HTTP requests
+│   │   └── ClaimsController.cs
+│   ├── Models							# Defines data models used in the application
+│   │   ├── ClaimDetail.cs
+│   │   ├── Claims.cs
+│   │   ├── Note.cs
+│   │   └── Notes.cs
+│   ├── Documentation					# Includes implementation guides and related images
+│   │   ├── StepByStepImplementation.md
+│   │   └── Images
+│   │       ├── AspDotNetSolutionCreate.jpg
+│   │       └── AspDotNetCoreWebApiProjectCreate.jpg
+│   ├── Dockerfile						# Dockerfile for containerizing the application
+│   ├── ClaimStatus.csproj				# Project file defining dependencies and configurations
+│   ├── Program.cs						# Entry point of the application
+│   └── appsettings.json (optional)		# Configuration file for application settings
+├── mocks								# Contains mock data for testing the API
+│   ├── claims.json
+│   └── notes.json
+├── pipelines							# Stores CI/CD pipeline configurations
+│   └── azure-pipelines.yml
+├── iac									# Infrastructure as Code templates for resource provisioning
+│   ├── main.bicep
+│   └── main.tf
+├── scans								# Stores security scan results or related artifacts
+│   └── defender-findings.png
+├── observability						# Resources for monitoring and observability
+│   ├── queries.kql
+│   └── sample-screenshots
+│       └── observability-example.png
+└── README.md							# Documentation for the solution
+
+- - ClaimStatus/ — service source + Dockerfile.
+- mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
+- apim/ — APIM policy files or export.
+- iac/ — Bicep/Terraform templates.
+- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
+- scans/ — link/screenshots to Defender findings
+- observability/ — saved KQL queries and sample screenshots.
+- README.md — instructions, GenAI prompts used, how to run/tests.
 ----------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
 
@@ -32,7 +66,6 @@ This document provides an overview of the ClaimStatus API which is a asp.net cor
 The API is designed to manage and track the status of claims within a system. 
 It allows users to retrieve claim statuses by their unique identifiers and provides a summary of all claim statuses integrated with OpenAI for enhanced insights.
 For more details, please refer to the [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md).
-
 
 ----------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
@@ -68,11 +101,17 @@ It provide a secure configuration using user-secrets for local development.
 	- Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
 	- You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-
-
-## Run and Test the Microservices from Docker on Local machine
+## Run and Test the Solution from Docker on Local machine
 1. Open a terminal under solution folder run docker compose up command to build and run the microservices in Docker containers:
-   
+   ```powershell
+   docker compose up --build
+   ```
+   This command builds the Docker images for both ProductService and OrderService and starts the containers.
+Your terminal should look like in immage below:
+2. Open a browser and navigate to the following URLs to access the Swagger UI for each microservice to test both are working
+   - ClaimStatus: 
+	[http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
+	[https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
 ----------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
 # Deployment on azure

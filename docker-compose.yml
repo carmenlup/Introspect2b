@@ -1,0 +1,30 @@
+version: '3.4'
+
+services:
+  claim-status-app:
+    build:
+      context: ./ClaimStatus
+      dockerfile: Dockerfile
+    container_name: claim-status-app
+    ports:
+      # Map the host's 7238 (from launchSettings.json 'https' profile) to the container's HTTPS port (8031)
+      - "7238:8031"
+      - "5261:8030"  # Map HTTP traffic (host:container)
+    environment:
+      - ASPNETCORE_URLS=https://+:8031;http://+:8030
+      # ----------------------------------------------------
+      # Kestrel Configuration to use the Development Certificate
+      # ----------------------------------------------------
+      # 1. Tell Kestrel where the certificate is mounted inside the container
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/localdockercert.pfx
+      # 2. Set the default password (the password is "password" by default if you use the dev-certs tool)
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=runapifromdocker # NOTE: This is the default password for dotnet dev-certs
+      # 3. Tell Kestrel to allow insecure HTTP on 8030 (optional, but standard practice)
+      - ASPNETCORE_HTTP_PORTS=8030
+    volumes:
+      # ----------------------------------------------------
+      # Volume Mount for Windows Host Certificate (Handles Spaces via Variable)
+      # ----------------------------------------------------
+      # Mounts the .aspnet/https folder from the host to /https in the container.
+      # Docker Compose on Windows automatically expands the %USERPROFILE% variable.
+      - ${USERPROFILE}\.aspnet\https:/https:ro 

@@ -13,7 +13,7 @@ using OpenAI.Chat;
 public class ClaimsController : ControllerBase
 {
     private readonly ILogger<ClaimsController> _logger;
-    private readonly string? _solPath;
+    private readonly string? _mocksPath;
     private readonly IConfiguration _configuration;
 
 
@@ -21,8 +21,7 @@ public class ClaimsController : ControllerBase
     {
         _logger = logger;
         _configuration = configuration;
-        var currentDirectory = Directory.GetCurrentDirectory(); // Gets the current working directory
-        _solPath = Directory.GetParent(currentDirectory)?.FullName; // Navigate up to the solution folder
+        _mocksPath = Path.Combine(Directory.GetCurrentDirectory(), "mocks"); ; // Navigate up to the solution folder
     }
 
     [HttpGet("{id}")]
@@ -35,12 +34,12 @@ public class ClaimsController : ControllerBase
             return BadRequest("Invalid Id Claim provided.");
         }
 
-        var claimsFilePath = Path.Combine(_solPath, "mocks", "claims.json");
+        var claimsFilePath = Path.Combine(_mocksPath, "claims.json");
 
         if (!System.IO.File.Exists(claimsFilePath))
         {
-            _logger.LogWarning("Claims file not found at path: {FilePath}", claimsFilePath);
-            return NotFound("Claims data set not found. Check if claim.json exist");
+            _logger.LogWarning($"Claims file not found at path: {claimsFilePath}" );
+            return NotFound($"Claims data set not found. Check if notes.exist to path: {claimsFilePath}");
         }
 
         var claimsData = System.IO.File.ReadAllText(claimsFilePath);
@@ -62,7 +61,7 @@ public class ClaimsController : ControllerBase
             Status = claim.Status
         };
 
-        _logger.LogInformation("Claim with ID {Id} successfully retrieved.", id);
+        _logger.LogInformation($"Claim with ID {id} successfully retrieved.");
         return Ok(claim);
     }
 
@@ -76,10 +75,10 @@ public class ClaimsController : ControllerBase
             return BadRequest($"Invalid claim id provided: {id}");
         }
 
-        var notesFilePath = Path.Combine(_solPath, "mocks", "notes.json");
+        var notesFilePath = Path.Combine(_mocksPath, "notes.json");
         if (!System.IO.File.Exists(notesFilePath))
         {
-            _logger.LogWarning("Notes file not found at path: {FilePath}", notesFilePath);
+            _logger.LogWarning($"Notes file not found at path: {notesFilePath}");
             return NotFound($"Notes data not found for Claim Id {id}. Check if notes.exist to path: {notesFilePath}");
         }
 
