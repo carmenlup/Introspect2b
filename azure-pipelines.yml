@@ -7,12 +7,24 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  dockerRegistryServiceConnection: 'acr-connnection'
+  dockerRegistryServiceConnection: 'acr-connection'
   imageRepository: 'claimstatus'
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
   tag: '$(Build.BuildId)'
-  
+
+# steps:
+# - task: UseDotNet@2
+#   inputs:
+#     packageType: 'sdk'
+#     version: '8.x'  # Specify your .NET version
+#     installationPath: $(Agent.ToolsDirectory)/dotnet
+
+# - script: dotnet build
+#   displayName: 'Build the project'
+
+# - script: dotnet test
+#   displayName: 'Run unit tests'
 steps:
 - task: Docker@2
   inputs:
