@@ -7,7 +7,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  dockerRegistryServiceConnection: 'acr-connection'
+  dockerRegistryServiceConnection: 'acr-connnection'
   imageRepository: 'claimstatus'
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
