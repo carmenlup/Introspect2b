@@ -4,7 +4,7 @@ trigger:
       - main  # Trigger pipeline on changes to the main branch
   paths:
     include:
-    #- app/*
+    - app/*
     - mocks/*
     - Dockerfile
     - pipelines/azure-pipelines.yml
