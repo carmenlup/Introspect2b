@@ -13,7 +13,7 @@ variables:
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/ClaimStatus/Dockerfile'
   tag: '$(Build.BuildId)'
-  imageName: '$(containerRegistry)/$(imageRepository):$(tag)'  # Full image name with tag
+  imageName: '$(containerRegistry)/$(imageRepository):latest'  # Full image name with tag
   resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
   location: 'westeurope'  # Replace with your Azure region
 stages:
