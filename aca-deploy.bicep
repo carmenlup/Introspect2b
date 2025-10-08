@@ -6,7 +6,7 @@
 param containerAppName string = 'claimstatus-app'
 
 @description('The container image to deploy')
-param containerImage string
+param containerImage string = 'introspect2bacr.azurecr.io/claimstatus:latest'
 
 @description('The location for the resources')
 param location string = resourceGroup().location
