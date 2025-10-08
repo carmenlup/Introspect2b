@@ -6,7 +6,7 @@ trigger:
     include:
     - app/*
     - mocks/*
-    - Dockerfile
+    #- Dockerfile
     - pipelines/azure-pipelines.yml
 
 
