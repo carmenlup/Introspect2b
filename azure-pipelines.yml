@@ -3,12 +3,12 @@ trigger:
     include:
       - main  # Trigger pipeline on changes to the main branch
       - master
-  paths:
-    include:
-    - ClaimStatus/*
-    - mocks/*
-    - ClaimStatus/Dockerfile
-    - pipelines/azure-pipelines.yml
+  # paths:
+  #   include:
+  #   - ClaimStatus/*
+  #   - mocks/*
+  #   - ClaimStatus/Dockerfile
+  #   - pipelines/azure-pipelines.yml
 
 
 pool:
