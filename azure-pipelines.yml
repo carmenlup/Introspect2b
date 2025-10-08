@@ -66,20 +66,24 @@ stages:
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy to Azure Container Apps using Bicep'
-      inlineScript: |
-        # Check if the ACR resource exists
-        echo "Checking if ACR resource exists: $(containerRegistry)"
-        acrExists=$(az acr show --name $(containerRegistry) --query "name" --output tsv 2>/dev/null || echo "")
+      inputs:
+        azureSubscription: 'azure-subscription'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          # Check if the ACR resource exists
+          echo "Checking if ACR resource exists: $(containerRegistry)"
+          acrExists=$(az acr show --name $(containerRegistry) --query "name" --output tsv 2>/dev/null || echo "")
 
-        if [ -n "$appExists" ]; then
-          echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
-          exit 1
-        else
-          echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
-        fi
+          if [ -n "$appExists" ]; then
+            echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
+            exit 1
+          else
+            echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
+          fi
 
-        # Deploy the application using the Bicep template
-        az deployment group create \
-          --resource-group $(resourceGroup) \
-          --template-file $(bicepFilePath) \
-          --parameters containerImage=$(imageName) location=$(location)
+          # Deploy the application using the Bicep template
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(bicepFilePath) \
+            --parameters containerImage=$(imageName) location=$(location)
