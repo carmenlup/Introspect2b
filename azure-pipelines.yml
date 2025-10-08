@@ -4,9 +4,9 @@ trigger:
       - main  # Trigger pipeline on changes to the main branch
   paths:
     include:
-    - app/*
+    #- app/*
     - mocks/*
-    #- Dockerfile
+    - Dockerfile
     - pipelines/azure-pipelines.yml
 
 
@@ -17,7 +17,7 @@ variables:
   dockerRegistryServiceConnection: 'acr-connection'
   imageRepository: 'claimstatus'
   containerRegistry: 'introspect2bacr.azurecr.io'
-  dockerfilePath: '$(Build.SourcesDirectory)/app/Dockerfile'
+  dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
 # steps:
