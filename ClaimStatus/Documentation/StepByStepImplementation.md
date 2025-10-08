@@ -235,7 +235,7 @@ app.Run();
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
 
-## Containerization and run Claims without 
+## Containerization and run Claims 
   
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.
 Open a terminal under solution folder and navigate to the project directory (ClaimStatus). The following steps will guide you through the containerization process:

@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35312.102
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClaimStatus", "ClaimStatus\ClaimStatus.csproj", "{B3D2C79E-C057-4FEF-9CE9-FA23A763DF01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClaimStatus", "ClaimStatus\ClaimStatus.csproj", "{B3D2C79E-C057-4FEF-9CE9-FA23A763DF01}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mocks", "mocks", "{E4D46124-F27E-4B17-84D2-B266CA579CB7}"
 	ProjectSection(SolutionItems) = preProject
@@ -14,6 +14,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "observability", "observability", "{80628AE2-21FC-4242-91CF-F8F6C32F9CE1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{3200055A-FB53-41F1-A24A-586B0821CA7C}"
+	ProjectSection(SolutionItems) = preProject
+		azure-pipelines.yml = azure-pipelines.yml
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apim", "apim", "{399320BF-A6E7-43DE-9B91-27EAC9570F14}"
 EndProject

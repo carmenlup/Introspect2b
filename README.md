@@ -114,65 +114,93 @@ Your terminal should look like in immage below:
 	[https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
 ----------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
-# Deployment on azure
-This section provides instructions for deploying the microservices to Azure using Azure Container Registry (ACR) and Azure Container Apps (ACA).
+# Deployment on azure 
+This section provides instructions for automated deployment of the Clame Status to Azure using Azure DevOps, Azure Container Registry (ACR), and Azure Container Apps (ACA).
 
-## Deployment to Azure Container Registry (ACR) 
-##### 1. Login to azure
+## Prerequisites
+Few prerequisites are needed before starting the deployment process:
+1. **Deploy Azure Resources**: Ensure that the necessary Azure resources are deployed, including:
+   - Azure Container Registry (ACR)
+   - Azure Container Apps (ACA)
+   - Azure Log Analytics Workspace
+   - Azure Application Insights
+2. **Azure DevOps Setup**:		 
+   	- project and repository, 
+	- needed connections, and permissions.
+3. **GitHub Repository**: The source code for the microservices should be hosted in a GitHub repository.
+
+
+## 1. Deployment to Azure Container Registry (ACR) 
+We will use Azure CLI for this objective.
+##### 1.1 Login to azure
 ```
 az login --tenant YOUR_TENANT_ID_
 ```
-##### 2 Create the resource group
+##### 1.2 Create the resource group
 ```
-az group create --name introspect-1-b --location westeurope
+az group create --name introspect-2-b --location westeurope
 ```
-##### 3. Create the ACR registry
+##### 1.3. Create the ACR registry
+- Check if your subscription is registered to use `Microsoft.ContainerRegistry` provider
 ```
-az acr create --resource-group introspect-1-b --name introspect1bacr --sku Basic
+az provider show --namespace Microsoft.ContainerRegistry --query "registrationState"
 ```
-
-##### 4 Get the ACR login server name
+- If the registrationState is `NotRegistered`, run the following command to register the provider:
 ```
-az acr show --name introspect1bacr --query loginServer --output table
+az provider register --namespace Microsoft.ContainerRegistry
 ```
-##### 5. Tag the Docker image for ClaimStatus 
-You need to ensure your local Docker immage exists before tagging it. 
-If you have not built the Docker image yet, you can do so by running the following command in the ProductService directory:
+- Wait registration to finish. You can check the result by running the command in step 1 again.
+- Create the ACR registry
 ```
-docker build -t claimstatus:latest .
+az acr create --resource-group introspect-2-b --name introspect2bacr --sku Basic
 ```
-Then, tag the Docker image for claimstatus:
+- Enable the admin user account for the registry
 ```
-docker tag claimstatus introspect1bacr.azurecr.io/productservice:latest
-```
-
-##### 6. Login to the ACR registry
-```
-az acr login --name introspect1bacr
+az acr update -n introspect2bacr --admin-enabled true
 ```
 
-##### 7. Push the Docker image to ACR for ProductService
-```
-docker push introspect1bacr.azurecr.io/claimstatus:latest
-```
+## 2. Azure DevOps Setup 
+In order to automate the deployment process, we will set up a CI/CD pipeline in Azure DevOps.
+
+##### 2.1 Create a new project in Azure DevOps
+   - Go to your Azure DevOps organization and click on "New Project".
+   - Enter a name for your project (e.g., "introspect-2-b") and click "Create".
+##### 2.2. Setup GitHub connection
+   - In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
+   - Click on "New service connection" and select "GitHub".
+   - Authenticate with your GitHub account and authorize Azure DevOps to access your repositories.
+##### 2.3. Create secure connection to Azure Container Registry (ACR) and Agend
 
 
-##### 10. Verify the images in ACR
-```
-az acr repository list --name introspect1bacr --output table
-```
-Both productservice and orderservice should be listed in the output.
+## Description
+The deployment process involves the following steps:
+1. **Connect to Github Repository**: The source code for the microservices is hosted in a GitHub repository, which is connected to Azure DevOps for continuous integration and deployment (CI/CD).
+1. **Build and Push Docker Images to ACR**: The microservice images are built and pushed to an Azure Container Registry (ACR) for secure storage and management.
+1. **Deploy to Azure Container Apps (ACA)**: The microservices are deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
+1. **Set Up CI/CD Pipeline in Azure DevOps**: An automated CI/CD pipeline is created in Azure DevOps to streamline the build, test, and deployment processes.
 
-# Deployment to Azure Container Apps (ACA) using Azure Portal
+# Deployment to Azure Container Apps (ACA) using automation with bicep
+This section provides instructions for deploying the ClaimStatus to Azure Container Apps (ACA) using azure pipelines.
+1. Create a new pipeline in Azure DevOps
+   - Go to your Azure DevOps project and navigate to the Pipelines section.
+   - Click on "New Pipeline" and select "Azure Repos Git" as the source.
+Repository is in Github so select GitHub and authenticate if needed.
+	
+   - Select your repository containing the microservices code.
+   - Choose "Starter pipeline" and replace the default YAML with the following configuration:
+
+```yaml
+
+
 
 ##### 1. Deploy ProductService in ACA
 1. Go to azure portal and create a new Azure Container App.
 2. Select respurce group `introspect-1-b` 
-3. Conteiner App Name: `productservice-app`
+3. Conteiner App Name: `claimstatus-app`
 4. Click on Create new environment
-	- Set the environment name to `my-container-app-env` and select the resource group `introspect-1-b`.
+	- Set the environment name to `my-container-app-env` and select the resource group `introspect-2-b`.
 	- Go to Monitoring tab and click Create New Log Analytics Workspace
-		- Set the name to `workspace-intospect1b-logs`
+		- Set the name to `workspace-intospect2b-logs`
 		
   		![analytics workspace](Documentation/Images/CreateACABasics.jpg "Analytics Workspace")
 
@@ -242,3 +270,7 @@ For further reading and learning about Azure Container Apps, Dapr, and microserv
 1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
 1. Microsoft Dapr documentation: [Dapr Documentation](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview)
 1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
+
+
+
+[Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/modules/authenticate-azure-deployment-pipeline-service-principals/1-introduction)
