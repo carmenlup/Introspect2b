@@ -21,18 +21,6 @@ variables:
   dockerfilePath: '$(Build.SourcesDirectory)/ClaimStatus/Dockerfile'
   tag: '$(Build.BuildId)'
 
-# steps:
-# - task: UseDotNet@2
-#   inputs:
-#     packageType: 'sdk'
-#     version: '8.x'  # Specify your .NET version
-#     installationPath: $(Agent.ToolsDirectory)/dotnet
-
-# - script: dotnet build
-#   displayName: 'Build the project'
-
-# - script: dotnet test
-#   displayName: 'Run unit tests'
 stages:
 - stage: Build
   displayName: 'Build and Push Image'
@@ -71,34 +59,3 @@ stages:
         tags: |
           $(tag)
           latest
-# steps:
-# # 1. Login to ACR using Azure CLI or Docker task (command: login)
-# - task: Docker@2
-#   displayName: Login to ACR
-#   inputs:
-#     command: login
-#     containerRegistry: '$(dockerRegistryServiceConnection)'
-# # 2. Build and Push the image
-# - task: Docker@2
-#   displayName: Build and Push Image
-#   inputs:
-#     containerRegistry: '$(dockerRegistryServiceConnection)'
-#     repository: '$(imageRepository)'
-#     command: 'buildAndPush'
-#     # Important: Set buildContext to the folder *containing* ClaimStatus and mock
-#     buildContext: '$(Build.SourcesDirectory)'
-#     Dockerfile: 'ClaimStatus/Dockerfile' # Relative path from buildContext
-#     tags: | 
-#       '$(tag)'
-#       latest
-
-# - task: Docker@2
-#   inputs:
-#     containerRegistry: '$(dockerRegistryServiceConnection)'
-#     repository: '$(imageRepository)'
-#     command: 'buildAndPush'
-#     Dockerfile: '$(dockerfilePath)'
-#     tags: | 
-#         '$(tag)'
-#         latest
-   
