@@ -21,6 +21,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apim", "apim", "{399320BF-A6E7-43DE-9B91-27EAC9570F14}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{D5A3BC02-56D1-4F53-923C-2F1B7F694942}"
+	ProjectSection(SolutionItems) = preProject
+		aca-deploy.bicep = aca-deploy.bicep
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scans", "scans", "{D82F49DB-FF86-460D-8863-369DB4CEC6A2}"
 EndProject
