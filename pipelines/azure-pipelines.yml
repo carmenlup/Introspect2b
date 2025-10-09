@@ -16,7 +16,37 @@ variables:
   imageName: '$(containerRegistry)/$(imageRepository):latest'  # Full image name with tag
   resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
   location: 'westeurope'  # Replace with your Azure region
+
 stages:
+- stage: Deploy ACR
+  displayName: 'Deploy Azure Container Registry'
+  variables:
+    containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
+    acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
+  jobs:
+  - job: 'DeployACR'
+    displayName: 'Deploy ACR if not exists'
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Check and Create ACR if not exists'
+      inputs:
+        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Checking if ACR resource exists: $(containerRegistry)"
+          acrExists=$(az acr show --name $(containerRegistry) --query "name" --output tsv 2>/dev/null || echo "")
+          
+          if [ -n "$acrExists" ]; then
+              echo "Azure Container Registry $(containerRegistry) already exists. Deployment will not proceed."
+              exit 1
+          else
+              echo "Azure Container Registry $(containerRegistry) does not exist. Proceeding with deployment."
+              az acr create --resource-group $(resourceGroup) --name $(containerRegistry) --sku Basic --location $(location)
+          fi
+
 - stage: Build
   displayName: 'Build and Push Image'
   jobs:
@@ -55,40 +85,16 @@ stages:
 
 - stage: Deploy
   displayName: 'Deploy to Azure Container Apps'
-  dependsOn: Build
+  dependsOn: Deploy ACR
   variables:
-    containerRegistryName: 'introspect2bacrTest'  # Name of your Azure Container Registry
+    containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
     acaBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy.bicep'  # Path to the Bicep file
-    acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
   jobs:
   - job: Deploy
     displayName: 'Deploy Application'
     pool:
       vmImage: 'ubuntu-latest'
     steps:
-    - task: AzureCLI@2
-      displayName: 'Deploy Azure Containe Registry using Bicep'
-      inputs:
-        azureSubscription: 'azure-subscription'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Check if the ACR resource exists
-          echo "Checking if ACR resource exists: $(containerRegistryName)
-          acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
-          
-          if [ -n "$acrExists" ]; then
-              echo "Azure Container Registry $(containerRegistryName) already exists. Deployment will not proceed."
-              exit 1
-          else
-              echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
-          fi
-          
-          # Deploy the ACR using the Bicep template
-          az deployment group create `
-              --resource-group $(resourceGroup) `
-              --template-file $(acrBicepFile) `
-              --parameters containerRegistryName=$(containerRegistryName) location=$(location)
     - task: AzureCLI@2
       displayName: 'Deploy to Azure Container Apps using Bicep'
       inputs:
