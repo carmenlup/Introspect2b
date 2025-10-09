@@ -18,7 +18,7 @@ variables:
   location: 'westeurope'  # Replace with your Azure region
 
 stages:
-- stage: Deploy ACR
+- stage: Deploy1
   displayName: 'Deploy Azure Container Registry'
   variables:
     containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
@@ -85,7 +85,7 @@ stages:
 
 - stage: Deploy
   displayName: 'Deploy to Azure Container Apps'
-  dependsOn: Deploy ACR
+  dependsOn: Deploy1
   variables:
     containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
     acaBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy.bicep'  # Path to the Bicep file
