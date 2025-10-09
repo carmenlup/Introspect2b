@@ -36,15 +36,15 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          echo "Checking if ACR resource exists: $(containerRegistry)
-          acrExists=$(az acr show --name $(containerRegistry) --query "name" --output tsv 2>/dev/null || echo "")
+          echo "Checking if ACR resource exists: $(containerRegistryName)"
+          acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           
           if [ -n "$acrExists" ]; then
-              echo "Azure Container Registry $(containerRegistry) already exists. Deployment will not proceed."
+              echo "Azure Container Registry $(containerRegistryName) already exists. Deployment will not proceed."
               #exit 1
           else
-              echo "Azure Container Registry $(containerRegistry) does not exist. Proceeding with deployment."
-
+              echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
+              # Deploy the ACR using the Bicep template
               az deployment group create \
               --resource-group $(resourceGroup) \
               --template-file $(acrBicepFile) \
