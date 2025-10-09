@@ -1,5 +1,8 @@
-//param containerRegistryName string = 'introspect2bacr'
-//param location string = 'westeurope'
+@description('The name of the Azure Container Registry to create or manage.')
+param containerRegistryName string
+
+@description('The location for the Azure Container Registry.')
+param location string
 
 resource registries_introspect2bacr_name_resource 'Microsoft.ContainerRegistry/registries@2025-05-01-preview' = {
   name: containerRegistryName
