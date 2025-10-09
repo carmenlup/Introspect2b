@@ -21,7 +21,7 @@ stages:
 - stage: Deploy1
   displayName: 'Deploy Azure Container Registry'
   variables:
-    containerRegistryName: 'introspect2bacr1234'  # Name of your Azure Container Registry
+    containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
     acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
   jobs:
   - job: 'DeployACR'

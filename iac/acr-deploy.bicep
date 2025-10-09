@@ -1,5 +1,5 @@
-param containerRegistryName string = 'introspect2bacr'
-param location string = 'westeurope'
+//param containerRegistryName string = 'introspect2bacr'
+//param location string = 'westeurope'
 
 resource registries_introspect2bacr_name_resource 'Microsoft.ContainerRegistry/registries@2025-05-01-preview' = {
   name: containerRegistryName
