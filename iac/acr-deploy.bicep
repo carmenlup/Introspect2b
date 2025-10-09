@@ -1,11 +1,12 @@
-param registries_introspect2bacr_name string = 'introspect2bacr'
+param containerRegistryName string = 'introspect2bacr'
+param location string = 'westeurope'
 
 resource registries_introspect2bacr_name_resource 'Microsoft.ContainerRegistry/registries@2025-05-01-preview' = {
-  name: registries_introspect2bacr_name
-  location: 'westeurope'
+  name: containerRegistryName
+  location: location
   sku: {
     name: 'Basic'
-    tier: 'Basic'
+    // tier: 'Basic'
   }
   properties: {
     adminUserEnabled: true

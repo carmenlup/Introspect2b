@@ -74,8 +74,8 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           # Check if the ACR resource exists
-          echo "Checking if ACR resource exists: $(containerRegistryName).azurecr.io"
-          acrExists=$(az acr show --name $(containerRegistryName).azurecr.io --query "name" --output tsv 2>/dev/null || echo "")
+          echo "Checking if ACR resource exists: $(containerRegistryName)
+          acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           
           if [ -n "$acrExists" ]; then
               echo "Azure Container Registry $(containerRegistryName) already exists. Deployment will not proceed."
@@ -85,9 +85,9 @@ stages:
           fi
           
           # Deploy the ACR using the Bicep template
-          az deployment group create \
-              --resource-group $(resourceGroup) \
-              --template-file $(acrBicepFile) \
+          az deployment group create `
+              --resource-group $(resourceGroup) `
+              --template-file $(acrBicepFile) `
               --parameters containerRegistryName=$(containerRegistryName) location=$(location)
     - task: AzureCLI@2
       displayName: 'Deploy to Azure Container Apps using Bicep'
