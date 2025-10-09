@@ -273,6 +273,7 @@ For further reading and learning about Azure Container Apps, Dapr, and microserv
 1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
 1. Microsoft Dapr documentation: [Dapr Documentation](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview)
 1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
+1. Bicep Documentation: [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
 
 
 
