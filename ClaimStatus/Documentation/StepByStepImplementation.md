@@ -238,11 +238,11 @@ app.Run();
 ## Containerization and run Claims 
   
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.
-Open a terminal under solution folder and navigate to the project directory (ClaimStatus). The following steps will guide you through the containerization process:
+Open a terminal and use th following steps will guide you through the containerization process:
 
 ##### 1. Build Immage
 ```powershell
-docker build -t claimstatus:latest .
+docker build -f ClaimStatus/Dockerfile -t claimstatus:latest .
 ```
 
 ##### 2. Create  Self-Signed Certificate

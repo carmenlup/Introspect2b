@@ -209,7 +209,7 @@ Repository is in Github so select GitHub and authenticate if needed.
 
 5. In the Container tab
     - Select the container registry `introspect1bacr.azurecr.io`
-	- Select image `productservice`
+	- Select image `claimstatus`
 	- Select tag `latest`
 	- Authentication type: `Secret`
 	- Delpoyment Stack : `.NET`

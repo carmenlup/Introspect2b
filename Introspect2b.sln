@@ -13,23 +13,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mocks", "mocks", "{E4D46124
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "observability", "observability", "{80628AE2-21FC-4242-91CF-F8F6C32F9CE1}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{3200055A-FB53-41F1-A24A-586B0821CA7C}"
-	ProjectSection(SolutionItems) = preProject
-		azure-pipelines.yml = azure-pipelines.yml
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apim", "apim", "{399320BF-A6E7-43DE-9B91-27EAC9570F14}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{D5A3BC02-56D1-4F53-923C-2F1B7F694942}"
-	ProjectSection(SolutionItems) = preProject
-		aca-deploy.bicep = aca-deploy.bicep
-	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scans", "scans", "{D82F49DB-FF86-460D-8863-369DB4CEC6A2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3153FAB9-4B80-494C-A8D9-AD094330CFED}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{2FD8EE9C-96F9-489D-A016-BD18BF2AE998}"
+	ProjectSection(SolutionItems) = preProject
+		iac\aca-deploy.bicep = iac\aca-deploy.bicep
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{B03AD8A5-17A1-4E96-A1BA-895937254ECD}"
+	ProjectSection(SolutionItems) = preProject
+		pipelines\azure-pipelines.yml = pipelines\azure-pipelines.yml
 	EndProjectSection
 EndProject
 Global

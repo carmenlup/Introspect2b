@@ -1,10 +1,9 @@
-version: '3.4'
-
+# version: '3.4' - obsolete and unified starting with Compose V2
 services:
   claim-status-app:
     build:
-      context: ./ClaimStatus
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./ClaimStatus/Dockerfile
     container_name: claim-status-app
     ports:
       # Map the host's 7238 (from launchSettings.json 'https' profile) to the container's HTTPS port (8031)
