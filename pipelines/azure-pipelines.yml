@@ -86,7 +86,7 @@ stages:
     displayName: 'Deploy Container Environment if not exists'
     variables:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
-      containerEnvironmentName: 'introspect2b-env'  # Name of your Container Environment
+      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
     steps:
     - task: AzureCLI@2
       displayName: 'Check and Create Container Environment if not exists'
