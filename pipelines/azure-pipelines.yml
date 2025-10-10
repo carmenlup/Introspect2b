@@ -96,7 +96,6 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-            # add commands for Container Environment
           echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
           appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           
@@ -147,6 +146,7 @@ stages:
           latest
 
 - stage: Deploy
+  condition: false
   displayName: 'Deploy to Azure Container Apps'
   dependsOn: Build
   variables:
