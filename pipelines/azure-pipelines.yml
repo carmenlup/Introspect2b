@@ -81,7 +81,34 @@ stages:
               --resource-group $(resourceGroup) \
               --template-file $(logAnalyticsBicepFile) \
               --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
-          fi   
+          fi 
+  - job: 'Deploy Container Environment'
+    displayName: 'Deploy Container Environment if not exists'
+    variables:
+      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
+      containerEnvironmentName: 'introspect2b-env'  # Name of your Container Environment
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Check and Create Container Environment if not exists'
+      inputs:
+        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
+          appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
+          
+          if [ -n "$appExists" ]; then
+              echo "Container Environment $(containerEnvironmentName) already exists. Deployment will not proceed."
+              #exit 1
+          else
+              echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
+              # Deploy the Container Environment using the Bicep template
+              az deployment group create \
+              --resource-group $(resourceGroup) \
+              --template-file $(containerEnvBicepFile) \
+              --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+          fi
 
 - stage: Build
   displayName: 'Build and Push Image'
