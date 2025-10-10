@@ -68,14 +68,14 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          echo "Checking if Log Analytics resource exists: introspect2b-law"
-          appExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name introspect2b-law --query "name" --output tsv 2>/dev/null || echo "")
+          echo "Checking if Log Analytics resource exists: $(logAnalyticsWorkspaceName)"
+          appExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           
           if [ -n "$appExists" ]; then
-              echo "Log Analytics introspect2b-law already exists. Deployment will not proceed."
+              echo "Log Analytics $(logAnalyticsWorkspaceName) already exists. Deployment will not proceed."
               #exit 1
           else
-              echo "Log Analytics introspect2b-law does not exist. Proceeding with deployment."
+              echo "Log Analytics $(logAnalyticsWorkspaceName) does not exist. Proceeding with deployment."
               # Deploy the Log Analytics using the Bicep template
               az deployment group create \
               --resource-group $(resourceGroup) \
