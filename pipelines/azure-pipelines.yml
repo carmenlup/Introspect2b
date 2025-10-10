@@ -26,8 +26,6 @@ stages:
   jobs:
   - job: 'DeployACR'
     displayName: 'Deploy ACR if not exists'
-    pool:
-      vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@2
       displayName: 'Check and Create ACR if not exists'
@@ -56,15 +54,40 @@ stages:
                 --name $(containerRegistryName) \
                 --resource-group $(resourceGroup) \
                 --registry $(containerRegistry)
-          fi        
+          fi 
+  - job: 'DeployLogAnalitics'
+    displayName: 'Deploy Log Analytics if not exists'
+    variables:
+      logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesy.bicep'  # Path to the Bicep file
+      logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Check and Create Log Analytics if not exists'
+      inputs:
+        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Checking if Log Analytics resource exists: introspect2b-law"
+          appExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name introspect2b-law --query "name" --output tsv 2>/dev/null || echo "")
+          
+          if [ -n "$appExists" ]; then
+              echo "Log Analytics introspect2b-law already exists. Deployment will not proceed."
+              #exit 1
+          else
+              echo "Log Analytics introspect2b-law does not exist. Proceeding with deployment."
+              # Deploy the Log Analytics using the Bicep template
+              az deployment group create \
+              --resource-group $(resourceGroup) \
+              --template-file $(logAnalyticsBicepFile) \
+              --parameters logAnalyticsName=$(logAnalyticsWorkspaceName) location=$(location)
+          fi   
 
 - stage: Build
   displayName: 'Build and Push Image'
   jobs:
   - job: Build
     displayName: 'Build Docker Image'
-    pool:
-      vmImage: 'ubuntu-latest'
     steps:
     - script: |
        echo "Current working directory: $(pwd)"
@@ -103,8 +126,6 @@ stages:
   jobs:
   - job: Deploy
     displayName: 'Deploy Application'
-    pool:
-      vmImage: 'ubuntu-latest'
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy to Azure Container Apps using Bicep'

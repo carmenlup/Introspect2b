@@ -25,6 +25,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{2FD8EE9C-96F9-489D-A016-BD18BF2AE998}"
 	ProjectSection(SolutionItems) = preProject
 		iac\aca-deploy.bicep = iac\aca-deploy.bicep
+		iac\aca-deploy-prerequisitesy.bicep = iac\aca-deploy-prerequisitesy.bicep
 		iac\acr-deploy.bicep = iac\acr-deploy.bicep
 	EndProjectSection
 EndProject
@@ -35,7 +36,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{84AA35A6-5CF3-43F6-B2A9-68AC3B84E9F8}"
 	ProjectSection(SolutionItems) = preProject
-		pipeline-test.ps1 = pipeline-test.ps1
+		Documentation\pipeline-test.ps1 = Documentation\pipeline-test.ps1
 	EndProjectSection
 EndProject
 Global

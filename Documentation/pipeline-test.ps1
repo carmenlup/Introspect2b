@@ -34,34 +34,3 @@ try {
     Write-Host "Error details: $($_.Exception.Message)"
     # exit 1
 }
-
-# --- ACI Test ---
-$containerRegistry = "introspect2bacr"
-$resourceGroup = "introspect-2-b"
-$acaBicepFile = "aca-deploy.bicep"
-$location = "westeurope"
-$containerAppName = "claim-status-app2"
-$imageRepository = "claimstatus"
-
-try {
-    $acaExists = az acr show --name $containerAppName --query "name" --output tsv 2>$null
-    Write-Host "Value of acrExists: $acaExists"
-
-    if ($acaExists) {
-        Write-Host "Azure Container App $containerAppName already exists. Deployment will not proceed."
-        # exit 1
-    } else {
-        Write-Host "Azure Container App $containerAppName does not exist. Proceeding with deployment."
-        # Deploy the application using the Bicep template
-        az deployment group create `
-            --resource-group $resourceGroup `
-            --template-file $acaBicepFile `
-            --parameters containerImage="$containerRegistryName/$imageRepository:latest" location=$location
-        Write-Host "ACA Deployment completed successfully."
-    }
-} catch {
-	Write-Host "An error occurred while checking for the ACR resource."
-	Write-Host "Error details: $($_.Exception.Message)"
-	# exit 1
-}
-
