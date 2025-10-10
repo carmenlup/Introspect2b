@@ -37,24 +37,24 @@ stages:
           echo "Checking if ACR resource exists: $(containerRegistryName)"
           acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           
-          if [ -n "$acrExists" ]; then
-              echo "Azure Container Registry $(containerRegistryName) already exists. Deployment will not proceed."
-              #exit 1
-          else
+          # if [ -n "$acrExists" ]; then
+          #     echo "Azure Container Registry $(containerRegistryName) already exists. Deployment will not proceed."
+          #     #exit 1
+          #else
               echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
               # Deploy the ACR using the Bicep template
               az deployment group create \
               --resource-group $(resourceGroup) \
               --template-file $(acrBicepFile) \
               --parameters containerRegistryName=$(containerRegistryName) location=$(location)
-
+              #Need to update the service connection with the new ACR details in azure DevOps
               echo "Updating Azure DevOps service connection for ACR..."
               az devops service-endpoint update \
                 --id $(dockerRegistryServiceConnection) \
                 --name $(containerRegistryName) \
                 --resource-group $(resourceGroup) \
                 --registry $(containerRegistry)
-          fi 
+          #fi 
   - job: 'DeployLogAnalytics'
     displayName: 'Deploy Log Analytics if not exists'
     variables:
@@ -71,34 +71,25 @@ stages:
           echo "Checking if Log Analytics resource exists: $(logAnalyticsWorkspaceName)"
           appExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           
-          if [ -n "$appExists" ]; then
-              echo "Log Analytics $(logAnalyticsWorkspaceName) already exists. Deployment will not proceed."
-              #exit 1
+          echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
+          appEnvExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
+          
+          if [ -n "$appExists" ] && [ -n "$appEnvExists" ]; then
+            echo "Log Analytics $(logAnalyticsWorkspaceName) already exists. Deployment will not proceed."
+            echo "Container Environment $(containerEnvironmentName) already exists. Deployment will not proceed."
+            #exit 1
           else
-              echo "Log Analytics $(logAnalyticsWorkspaceName) does not exist. Proceeding with deployment."
-              # Deploy the Log Analytics using the Bicep template
-              az deployment group create \
-              --resource-group $(resourceGroup) \
-              --template-file $(logAnalyticsBicepFile) \
-              --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
+            echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
+            # Deploy the Container Environment using the Bicep template
+            az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(containerEnvBicepFile) \
+            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
           fi 
           # add commands for Container Environment
-          echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
-          appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           
-          if [ -n "$appExists" ]; then
-              echo "Container Environment $(containerEnvironmentName) already exists. Deployment will not proceed."
-              #exit 1
-          else
-              echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
-              # Deploy the Container Environment using the Bicep template
-              az deployment group create \
-              --resource-group $(resourceGroup) \
-              --template-file $(containerEnvBicepFile) \
-              --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
-          fi
   - job: 'DeployContainerEnvironment'
-    displayName: 'Deploy Container Environment if not exists'
+    displayName: 'zzzzzzzzzz'
     variables:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
