@@ -18,7 +18,7 @@ variables:
   location: 'westeurope'  # Replace with your Azure region
 
 stages:
-- stage: Deploy1
+- stage: DeployResources
   displayName: 'Deploy Azure Container Registry'
   variables:
     containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
@@ -55,7 +55,7 @@ stages:
                 --resource-group $(resourceGroup) \
                 --registry $(containerRegistry)
           fi 
-  - job: 'DeployLogAnalitics'
+  - job: 'DeployLogAnalytics'
     displayName: 'Deploy Log Analytics if not exists'
     variables:
       logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesy.bicep'  # Path to the Bicep file
@@ -82,19 +82,7 @@ stages:
               --template-file $(logAnalyticsBicepFile) \
               --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
           fi 
-  - job: 'Deploy Container Environment'
-    displayName: 'Deploy Container Environment if not exists'
-    variables:
-      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
-      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
-    steps:
-    - task: AzureCLI@2
-      displayName: 'Check and Create Container Environment if not exists'
-      inputs:
-        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
+          # add commands for Container Environment
           echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
           appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           
@@ -109,6 +97,20 @@ stages:
               --template-file $(containerEnvBicepFile) \
               --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
           fi
+  - job: 'DeployContainerEnvironment'
+    displayName: 'Deploy Container Environment if not exists'
+    variables:
+      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
+      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Check and Create Container Environment if not exists'
+      inputs:
+        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+            echo "This is only to check how tasks are executed comparing with jobs"
 
 - stage: Build
   displayName: 'Build and Push Image'
