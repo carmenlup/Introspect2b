@@ -80,7 +80,7 @@ stages:
               az deployment group create \
               --resource-group $(resourceGroup) \
               --template-file $(logAnalyticsBicepFile) \
-              --parameters logAnalyticsName=$(logAnalyticsWorkspaceName) location=$(location)
+              --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
           fi   
 
 - stage: Build
