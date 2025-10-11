@@ -47,22 +47,23 @@ $resourceGroup = "introspect-2-b"
 
 Write-Host "Value of containerEnvNameExists: $containerEnvironmentName"
 try {
-        $containerEnvironmentNameExist= az containerapp env show --name $containerEnvironmentName --query "name" --output tsv 2>$null
-        Write-Host "Value of containerEnvNameExists: $containerEnvironmentNameExist"
-        
-        if ($containerEnvironmentNameExist) {
-	    	Write-Host "Container Environment $containerEnvironmentName already exists. Deployment will not proceed."
-	    	# exit 1
-	    } else {
-	    	Write-Host "Container Environment $containerEnvironmentName does not exist. Proceeding with deployment."
-	    }
+    $containerEnvironmentNameExist= az containerapp env show --name $containerEnvironmentName --resource-group $resourceGroup --query "name" --output tsv 2>$null
+    Write-Host "Value of containerEnvNameExists: $containerEnvironmentNameExist"
+    if ($containerEnvironmentNameExist) {
+       Write-Host "Container Environment $containerEnvironmentName already exists. Deployment will not proceed."
+       # exit 1
+    } else {
+       Write-Host "Container Environment $containerEnvironmentName does not exist. Proceeding with deployment."
+       az deployment group create `
+            --resource-group $resourceGroup `
+            --template-file $containerEnvBicepFile `
+            --parameters containerEnvironmentName=$containerEnvironmentName location=$location logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName
+        Write-Host "Deployment completed successfully."
+    }
 
-        az deployment group create \
-            --resource-group $(resourceGroup) \
-            --template-file $(containerEnvBicepFile) \
-            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
     
-    } catch {
+    #exit 1
+} catch {
     Write-Host "An error occurred during the deployment process."
     Write-Host "Error details: $($_.Exception.Message)"
     # exit 1
