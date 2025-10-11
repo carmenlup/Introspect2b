@@ -99,6 +99,8 @@ stages:
           echo "this is from prev job XXXX: $[dependencies.CheckResources.outputs['passOutput.acrExists']]"
           echo "this is from prev job variable: $(myVarFromJobA)"
           echo "this is from prev job variable2222: $(myVarFromJobA2222)"
+          echo "this is from prev job variablexxx: $(myVarFromJobAxxx)"
+          echo "this is from prev job variablexxx2222: $(myVarFromJobAxxx2222)"
           echo "check $[dependencies.CheckResources.outputs['passOutput']"
           # echo "Deploying Azure Container Registry $(containerRegistryName)..."
           # az deployment group create \
