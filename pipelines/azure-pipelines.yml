@@ -27,6 +27,7 @@ stages:
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
       acrExists: false
       logAnalyticsExists: false
+      containerEnvExists: false
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
@@ -47,36 +48,26 @@ stages:
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
               echo "Azure Container Registry $(containerRegistryName) exists."
           else
-              echo "##vso[task.setvariable variable=acrExists]false"
               echo "Azure Container Registry $(containerRegistryName) does not exist."
           fi
           echo "acrExists value: $(acrExists)"
           # Check if Log Analytics exists
           logAnalyticsExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "$logAnalyticsExists" ]; then
-              logAnalyticsExists=true
-              # print logAnalyticsExists value for debugging
-              echo "LogAnalyticsExists value: $(logAnalyticsExists)"
+              echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]true"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists."
           else
-              #logAnalyticsExists=false
-              echo "LogAnalyticsExists value: $(logAnalyticsExists)"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist."
           fi
 
           # Check if Container Environment exists
           containerEnvExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "$containerEnvExists" ]; then
-              echo "##vso[task.setvariable variable=containerEnvExists]true"
+              echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]true"
               echo "Container Environment $(containerEnvironmentName) exists."
           else
-              echo "##vso[task.setvariable variable=containerEnvExists]false"
-              # print ContainerEnvEsists value for debugging
-              echo "ContainerEnvExists value: $(containerEnvExists)"
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
-        
-    
 
   - job: DeployACR
     displayName: 'Deploy ACR if not exists'
@@ -135,6 +126,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
           echo "Deploying Container Environment $(containerEnvironmentName)..."
           az deployment group create \
             --resource-group $(resourceGroup) \
