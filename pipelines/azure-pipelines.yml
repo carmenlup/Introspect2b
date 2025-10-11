@@ -29,7 +29,7 @@ stages:
       acrExists: false
       logAnalyticsExists: false
       containerEnvExists: false
-      containerAppNameExist: false
+      #containerAppNameExist: false
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
@@ -63,7 +63,7 @@ stages:
           fi
 
           # Check if Container Environment exists
-          containerEnvNameExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
+          containerEnvNameExists=$(az containerapp env show --name $(containerEnvironmentName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "containerEnvNameExists" ]; then
               echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]true"
               echo "Container Environment $(containerEnvironmentName) exists. Deployment will not proceed."
@@ -72,14 +72,14 @@ stages:
           fi
 
           # check if Container App exists
-          containerAppNameExist=$(az containerapp show --resource-group $(resourceGroup) --name $(imageRepository) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "containerAppNameExist" ]; then
-                echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
-                echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
-                exit 1
-            else
-                echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
-            fi
+          # containerAppNameExist=$(az containerapp show --resource-group $(resourceGroup) --name $(imageRepository) --query "name" --output tsv 2>/dev/null || echo "")
+          # if [ -n "containerAppNameExist" ]; then
+          #       echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
+          #       echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
+          #       exit 1
+          #   else
+          #       echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
+          #   fi
   - job: Values
     displayName: 'Display Values for Debugging'
     dependsOn: CheckResources
@@ -87,13 +87,13 @@ stages:
         acrExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]
         logAnalyticsExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
         containerEnvExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
-        containerAppNameExist: $[ dependencies.CheckResources.outputs['passOutput.containerAppExist'] ]
+        #containerAppNameExist: $[ dependencies.CheckResources.outputs['passOutput.containerAppExist'] ]
     steps:
     - script: |
         echo "ACR Exists: $(acrExists)"
         echo "Log Analytics Exists: $(logAnalyticsExists)"
         echo "Container Environment Exists: $(containerEnvExists)"
-        echo "Container App Exists: $(containerAppNameExist)"
+        #echo "Container App Exists: $(containerAppNameExist)"
       displayName: 'Display Variables Values'
 
   - job: DeployACR

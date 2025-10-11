@@ -12,40 +12,59 @@ $location = "westeurope"
 Write-Host "Checking if ACR resource exists: $containerRegistryName"
 
 try {
-    $acrExists = az acr show --name $containerRegistryName --query "name" --output tsv 2>$null
-    Write-Host "Value of acrExists: $acrExists"
+        $acrExists = az acr show --name $containerRegistryName --query "name" --output tsv 2>$null
+        Write-Host "Value of acrExists: $acrExists"
 
-    if ($acrExists) {
-        Write-Host "Azure Container Registry $containerRegistryName already exists. Deployment will not proceed."
-        # exit 1
-    } else {
-        Write-Host "Azure Container Registry $containerRegistryName does not exist. Proceeding with deployment."
-    }
+        if ($acrExists) {
+            Write-Host "Azure Container Registry $containerRegistryName already exists. Deployment will not proceed."
+            # exit 1
+        } else {
+            Write-Host "Azure Container Registry $containerRegistryName does not exist. Proceeding with deployment."
+        }
 
-    # Deploy the ACR using the Bicep template
-    Write-Host "Deploying Azure Container Registry using Bicep..."
-    az deployment group create `
-        --resource-group $resourceGroup `
-        --template-file $acrBicepFile `
-        --parameters containerRegistryName=$containerRegistryName location=$location
-    Write-Host "Deployment completed successfully."
-} catch {
-    Write-Host "An error occurred during the deployment process."
-    Write-Host "Error details: $($_.Exception.Message)"
-    # exit 1
-}
-az containerapp env show -n claimstatus-container-app-env -g introspect-2-b --query "name" --output tsv
+        # Deploy the ACR using the Bicep template
+        Write-Host "Deploying Azure Container Registry using Bicep..."
+        az deployment group create `
+            --resource-group $resourceGroup `
+            --template-file $acrBicepFile `
+            --parameters containerRegistryName=$containerRegistryName location=$location
+        Write-Host "Deployment completed successfully."
+    } 
+catch {
+         Write-Host "An error occurred during the deployment process."
+         Write-Host "Error details: $($_.Exception.Message)"
+         # exit 1
+      }
 
-#check If Container Environment Resource exists
+
+# --- Container Environment Resource exists ---
+# Declare variables
 $containerEnvironmentName = "claimstatus-container-app-env"
 $containerEnvBicepFile = "container-env.bicep"
 $logAnalyticsWorkspaceName = "workspace-intospect2b-logs"
 $location = "westeurope"
 $resourceGroup = "introspect-2-b"
-az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv
-az containerapp env show --resource-group 'introspect-2-b' --name 'claimstatus-container-app-env' --query "name" --output tsv
 
-az deployment group create \
+Write-Host "Value of containerEnvNameExists: $containerEnvironmentName"
+try {
+        $containerEnvironmentNameExist= az containerapp env show --name $containerEnvironmentName --query "name" --output tsv 2>$null
+        Write-Host "Value of containerEnvNameExists: $containerEnvironmentNameExist"
+        
+        if ($containerEnvironmentNameExist) {
+	    	Write-Host "Container Environment $containerEnvironmentName already exists. Deployment will not proceed."
+	    	# exit 1
+	    } else {
+	    	Write-Host "Container Environment $containerEnvironmentName does not exist. Proceeding with deployment."
+	    }
+
+        az deployment group create \
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+    
+    } catch {
+    Write-Host "An error occurred during the deployment process."
+    Write-Host "Error details: $($_.Exception.Message)"
+    # exit 1
+}
+
