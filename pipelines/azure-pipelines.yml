@@ -83,6 +83,8 @@ stages:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
       myVarFromJobA: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]  
       myVarFromJobA2222: $[dependencies.CheckResources.outputs['passOutput.acrExists']]  
+      myVarFromJobAxxx: $[ dependencies.CheckResources.outputs['CheckResources.acrExists'] ]  
+      myVarFromJobAxxx2222: $[dependencies.CheckResources.outputs['CheckResources.acrExists']]  
     dependsOn: CheckResources
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
@@ -97,6 +99,7 @@ stages:
           echo "this is from prev job XXXX: $[dependencies.CheckResources.outputs['passOutput.acrExists']]"
           echo "this is from prev job variable: $(myVarFromJobA)"
           echo "this is from prev job variable2222: $(myVarFromJobA2222)"
+          echo "check $[dependencies.CheckResources.outputs['passOutput']"
           # echo "Deploying Azure Container Registry $(containerRegistryName)..."
           # az deployment group create \
           #   --resource-group $(resourceGroup) \
