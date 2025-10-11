@@ -41,9 +41,9 @@ stages:
           echo "Checking if resources exist..."
 
           # Check if ACR exists
-          acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "$acrExists" ]; then
-              echo "##vso[task.setvariable variable=acrExists]true"
+          acrNameExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
+          if [ -n "acrNameExists" ]; then
+              echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
               echo "acrExists value: $(acrExists)"
               echo "Azure Container Registry $(containerRegistryName) exists."
           else
