@@ -44,13 +44,12 @@ stages:
           acrNameExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "acrNameExists" ]; then
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
-              echo "acrExists value: $(acrExists)"
               echo "Azure Container Registry $(containerRegistryName) exists."
           else
               echo "##vso[task.setvariable variable=acrExists]false"
               echo "Azure Container Registry $(containerRegistryName) does not exist."
           fi
-
+          echo "acrExists value: $(acrExists)"
           # Check if Log Analytics exists
           logAnalyticsExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "$logAnalyticsExists" ]; then
@@ -75,6 +74,7 @@ stages:
               echo "ContainerEnvExists value: $(containerEnvExists)"
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
+        name: passOutput
     
 
   - job: DeployACR
@@ -91,6 +91,7 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
+          echo "this is from prev job: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]"
           echo "Deploying Azure Container Registry $(containerRegistryName)..."
           az deployment group create \
             --resource-group $(resourceGroup) \
