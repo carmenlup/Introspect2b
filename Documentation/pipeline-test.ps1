@@ -34,3 +34,18 @@ try {
     Write-Host "Error details: $($_.Exception.Message)"
     # exit 1
 }
+az containerapp env show -n claimstatus-container-app-env -g introspect-2-b --query "name" --output tsv
+
+#check If Container Environment Resource exists
+$containerEnvironmentName = "claimstatus-container-app-env"
+$containerEnvBicepFile = "container-env.bicep"
+$logAnalyticsWorkspaceName = "workspace-intospect2b-logs"
+$location = "westeurope"
+$resourceGroup = "introspect-2-b"
+az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv
+az containerapp env show --resource-group 'introspect-2-b' --name 'claimstatus-container-app-env' --query "name" --output tsv
+
+az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(containerEnvBicepFile) \
+            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)

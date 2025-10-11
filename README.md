@@ -120,12 +120,20 @@ Your terminal should look like in immage below:
 # Deployment on azure 
 This section provides instructions for automated deployment of the Clame Status to Azure using Azure DevOps, Azure Container Registry (ACR), and Azure Container Apps (ACA).
 
+## Description
+The deployment process involves the following steps:
+1. **Deploy Azure Resources**: Use Bicep templates to deploy the necessary Azure resources, including		:
+   	- Azure Container Apps (ACA), 
+	- Azure Container Registry (ACR), 
+	- Azure API Management (APIM),
+	- Azure OpenAI,
+	- Azure Log Analytics,
+	- Azure Application Insights.
+
 ## Prerequisites
 Few prerequisites are needed before starting the deployment process:
 1. **Deploy Azure Resources**: Ensure that the necessary Azure resources are deployed, including:
-   - Azure Container Registry (ACR)
    - Azure Container Apps (ACA)
-   - Azure Log Analytics Workspace
    - Azure Application Insights
 2. **Azure DevOps Setup**:		 
    	- project and repository, 

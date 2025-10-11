@@ -11,6 +11,7 @@ variables:
   resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
   location: 'westeurope'  # Replace with your Azure region
   dockerRegistryServiceConnection: 'acr-connection'
+  azureSubscription: 'azure-subscription'
   imageRepository: 'claimstatus'
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/ClaimStatus/Dockerfile'
@@ -135,7 +136,7 @@ stages:
     - task: AzureContainerApps@1
       inputs:
         appSourcePath: '$(Build.SourcesDirectory)/ClaimStatus'
-        azureSubscription: variables.azure-subscription
+        azureSubscription: '$(azure-subscription)'
         acrName: 'introspect2bacr'
         containerAppName: 'claim-status-app'
         resourceGroup: '$(resourceGroup)'
