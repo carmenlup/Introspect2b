@@ -123,12 +123,13 @@ This section provides instructions for automated deployment of the Clame Status 
 ## Description
 The deployment process involves the following steps:
 1. **Deploy Azure Resources**: Use Bicep templates to deploy the necessary Azure resources, including		:
-   	- Azure Container Apps (ACA), 
+   	*** - Azure Container Apps (ACA), 
 	- Azure Container Registry (ACR), 
-	- Azure API Management (APIM),
-	- Azure OpenAI,
+	*** - Azure API Management (APIM),
+	*** - Azure OpenAI,
 	- Azure Log Analytics,
-	- Azure Application Insights.
+	- Azure Container Environment,
+	*** - Azure Application Insights.
 
 ## Prerequisites
 Few prerequisites are needed before starting the deployment process:

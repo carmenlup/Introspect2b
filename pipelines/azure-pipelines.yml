@@ -48,27 +48,27 @@ stages:
           acrNameExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "acrNameExists" ]; then
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
-              echo "Azure Container Registry $(containerRegistryName) exists."
+              echo "Azure Container Registry $(containerRegistryName) exists. Deployment will not proceed."
           else
-              echo "Azure Container Registry $(containerRegistryName) does not exist."
+              echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Log Analytics exists
           logAnalyticsNameExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "logAnalyticsNameExists" ]; then
               echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]true"
-              echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists."
+              echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists. Deployment will not proceed."
           else
-              echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist."
+              echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Container Environment exists
           containerEnvNameExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "containerEnvNameExists" ]; then
               echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]true"
-              echo "Container Environment $(containerEnvironmentName) exists."
+              echo "Container Environment $(containerEnvironmentName) exists. Deployment will not proceed."
           else
-              echo "Container Environment $(containerEnvironmentName) does not exist."
+              echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
           fi
 
           # check if Container App exists
@@ -116,6 +116,7 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(acrBicepFile) \
             --parameters containerRegistryName=$(containerRegistryName) location=$(location)
+            --verbose
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
@@ -137,6 +138,7 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(logAnalyticsBicepFile) \
             --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
+            --verbose
   
   # - job: DeployContainerEnvironment
   #   displayName: 'Deploy Container Environment if not exists'
@@ -175,6 +177,7 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+            --verbose
   
 - stage: Build
   displayName: 'Build and Push Image'
