@@ -87,7 +87,7 @@ stages:
       myVarFromJobAxxx: $[ dependencies.CheckResources.outputs['CheckResources.acrExists'] ]  
       myVarFromJobAxxx2222: $[dependencies.CheckResources.outputs['CheckResources.acrExists']]  
     dependsOn: CheckResources
-    condition: eq($[dependencies.CheckResources.outputs['passOutput.acrExists']], 'false')  # Run only if ACR does not exist
+    condition: eq($(myVarFromJobA2222), 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
