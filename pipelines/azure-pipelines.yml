@@ -81,6 +81,7 @@ stages:
           else
              echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
           fi
+
   - job: Values
     displayName: 'Display Values for Debugging'
     dependsOn: CheckResources
@@ -117,7 +118,6 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(acrBicepFile) \
             --parameters containerRegistryName=$(containerRegistryName) location=$(location)
-            --verbose
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
@@ -139,23 +139,7 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(logAnalyticsBicepFile) \
             --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
-            --verbose
-  
-  # - job: DeployContainerEnvironment
-  #   displayName: 'Deploy Container Environment if not exists'
-  #   dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-  #   #condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
-  #   steps:
-  #   - task: AzureCLI@2
-  #     displayName: ''
-  #     displayName: 'D02: Verify File Paths Before ACA Deployment'
-  #   - task: AzureContainerApps@1
-  #     inputs:
-  #       appSourcePath: '$(Build.SourcesDirectory)/ClaimStatus'
-  #       azureSubscription: '$(azure-subscription)'
-  #       acrName: 'introspect2bacr'
-  #       containerAppName: 'claim-status-app'
-  #       resourceGroup: '$(resourceGroup)'
+            #--verbose
       
   - job: DeployContainerEnvironment
     displayName: 'Deploy Container Environment if not exists'
@@ -178,10 +162,11 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
-            --verbose
+            #--verbose
   
 - stage: Build
   displayName: 'Build and Push Image'
+  dependsOn: DeployMandatoryResources
   jobs:
   - job: Build
     displayName: 'Build Docker Image'

@@ -5,7 +5,7 @@
 # Declare variables
 $containerRegistryName = "introspect2bacr"
 $resourceGroup = "introspect-2-b"
-$acrBicepFile = "aca-deploy.bicep"
+$acrBicepFile = "acr-deploy.bicep"
 $location = "westeurope"
 
 # Check if the ACR resource exists
