@@ -30,8 +30,6 @@ stages:
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
-    outputs:       
-      acrExists: $(acrExists)
     steps:
     - task: AzureCLI@2
       displayName: 'Check if Resources Exist'
