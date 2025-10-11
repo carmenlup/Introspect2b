@@ -115,81 +115,104 @@ Your terminal should look like in immage below:
    - ClaimStatus: 
 	[http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
 	[https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
+
 ----------------------------------------------------------------------------------------------------------------------------------
 ----------------------------------------------------------------------------------------------------------------------------------
-# Deployment on azure 
-This section provides instructions for automated deployment of the Clame Status to Azure using Azure DevOps, Azure Container Registry (ACR), and Azure Container Apps (ACA).
+# Automation Overview 
+This section provides details about the implemented CI/CD pipeline and infrastructure as code (IaC) templates to automate the deployment process of the ClaimStatus API.
+
+## Pipleline and IaC Overview
+The implementation contain the pipeline and infrastructure as code (IaC) templates to automate the deployment process.
+The pipeline is defined in the `pipelines/azure-pipelines.yml` file and uses Bicep templates located in the `iac/` folder.
+
+**Remark 1**: For an easier maintainace and better understanding, each resource is defined in a separated Bicep file and also deployment of each resource is in a separated job in the pipeline defibition.
+	
+**Remark 2**: In real project the pipeline dedicated for code buld and resources deployment are separatesd. In this demo project, for simplicity, they are in the same pipeline.
+
+## Pipeline stages
+	
+### Stage 1: **Deploy Mandatory Resources**:	
+At this stage resources are checked and deployed if not exist.
+Resources are defined in the Bicep template and pileline uses them to deploy the resources in Azure.
+
+The resources deployed bicep files are:
+- Azure Container Registry (ACR),
+- *** - Azure Container Apps (ACA), 
+- *** - Azure API Management (APIM),
+- *** - Azure OpenAI,
+- Azure Log Analytics,
+- Azure Container Environment
+*** - Azure Application Insights.
+
+	
+   
+### Stage2: **Build and Push Docker Images to ACR**: 
+   Build the Docker images for the ClaimStatus API and push them to the Azure Container Registry (ACR).
+
+----------------------------------------------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------- 
+# Deployment Process Considerations
+The deployment process involves several steps to ensure that the ClaimStatus API is properly deployed and configured in Azure Container Apps (ACA). 
 
 ## Description
 The deployment process involves the following steps:
-1. **Deploy Azure Resources**: Use Bicep templates to deploy the necessary Azure resources, including		:
-   	*** - Azure Container Apps (ACA), 
-	- Azure Container Registry (ACR), 
-	*** - Azure API Management (APIM),
-	*** - Azure OpenAI,
-	- Azure Log Analytics,
-	- Azure Container Environment,
-	*** - Azure Application Insights.
+1. **Connect to Github Repository**: The source code for the ClaimStatus is hosted in a GitHub repository, which is connected to Azure DevOps for continuous integration and deployment (CI/CD).
+1. **Build and Push Docker Images to ACR**: The microservice images are built and pushed to an Azure Container Registry (ACR) for secure storage and management.
+1. **Deploy to Azure Container Apps (ACA)**: The microservices are deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
+1. **Set Up CI/CD Pipeline in Azure DevOps**: An automated CI/CD pipeline is created in Azure DevOps to streamline the build, test, and deployment processes.
+
+Below are the detailed steps for the deployment process.
 
 ## Prerequisites
 Few prerequisites are needed before starting the deployment process:
-1. **Deploy Azure Resources**: Ensure that the necessary Azure resources are deployed, including:
-   - Azure Container Apps (ACA)
-   - Azure Application Insights
-2. **Azure DevOps Setup**:		 
-   	- project and repository, 
-	- needed connections, and permissions.
+**Azure Portal**: Ensure you create create a resource group named `introspect-2-b` in West Europe region to host the resources.
+**Azure DevOps Setup**:		 
+   	- a new project 
+	- needed connections:
+		- github connection 
+		- Azure Container Registry connection
+		- Azure Resource Manager connection
+	- a new pipeline
 3. **GitHub Repository**: The source code for the microservices should be hosted in a GitHub repository.
 
-
-## 1. Deployment to Azure Container Registry (ACR) 
-We will use Azure CLI for this objective.
-##### 1.1 Login to azure
-```
-az login --tenant YOUR_TENANT_ID_
-```
-##### 1.2 Create the resource group
-```
-az group create --name introspect-2-b --location westeurope
-```
-##### 1.3. Create the ACR registry
-- Check if your subscription is registered to use `Microsoft.ContainerRegistry` provider
-```
-az provider show --namespace Microsoft.ContainerRegistry --query "registrationState"
-```
-- If the registrationState is `NotRegistered`, run the following command to register the provider:
-```
-az provider register --namespace Microsoft.ContainerRegistry
-```
-- Wait registration to finish. You can check the result by running the command in step 1 again.
-- Create the ACR registry
-```
-az acr create --resource-group introspect-2-b --name introspect2bacr --sku Basic
-```
-- Enable the admin user account for the registry
-```
-az acr update -n introspect2bacr --admin-enabled true
-```
 
 ## 2. Azure DevOps Setup 
 In order to automate the deployment process, we will set up a CI/CD pipeline in Azure DevOps.
 
 ##### 2.1 Create a new project in Azure DevOps
-   - Go to your Azure DevOps organization and click on "New Project".
-   - Enter a name for your project (e.g., "introspect-2-b") and click "Create".
+- Go to your Azure DevOps organization and click on "New Project".
+- Enter a name for your project (e.g., "introspect-2-b") and click "Create".
+
+Documentation link: [Create a project](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
+
 ##### 2.2. Setup GitHub connection
-   - In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
-   - Click on "New service connection" and select "GitHub".
-   - Authenticate with your GitHub account and authorize Azure DevOps to access your repositories.
-##### 2.3. Create secure connection to Azure Container Registry (ACR) and Agend
+- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
+- Click on "New service connection" and select "GitHub".
+- Authenticate with your GitHub account and authorize Azure DevOps to access your repositories.
+
+Documentation link: [Connect to GitHub](https://learn.microsoft.com/en-us/azure/devops/boards/github/connect-to-github?view=azure-devops)
+
+#### 2.3 Create Azure Resource Manager connection
+This will ensure that Azure DevOps can deploy resources to your Azure subscription.
+- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
+- Click on "New service connection" and select "Azure Resource Manager".
+- Connect using the service principal (automatic) option and follow the prompts to authenticate and authorize Azure DevOps.
+- Select the subscription and resource group `introspect-2-b` created on step 2.2.
+- Use `azure-connection` for service connection name and save it.
+
+Documentation link [Service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
+
+#### 
 
 
-## Description
-The deployment process involves the following steps:
-1. **Connect to Github Repository**: The source code for the microservices is hosted in a GitHub repository, which is connected to Azure DevOps for continuous integration and deployment (CI/CD).
-1. **Build and Push Docker Images to ACR**: The microservice images are built and pushed to an Azure Container Registry (ACR) for secure storage and management.
-1. **Deploy to Azure Container Apps (ACA)**: The microservices are deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
-1. **Set Up CI/CD Pipeline in Azure DevOps**: An automated CI/CD pipeline is created in Azure DevOps to streamline the build, test, and deployment processes.
+##### 2.3. Create secure connection to Azure Container Registry (ACR)
+- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
+- Click on "New service connection" and select "Docker Registry".
+- Select "Azure Container Registry" as the registry type.
+- Select the subscription and the ACR instance `introspect2bacr` created on step 1.3.
+- Use `acr-connection` for service connection name and save it.
+
+
 
 # Deployment to Azure Container Apps (ACA) using automation with bicep
 This section provides instructions for deploying the ClaimStatus to Azure Container Apps (ACA) using azure pipelines.
@@ -280,10 +303,6 @@ Content-Type: application/json
 ## Documentation & learnings
 For further reading and learning about Azure Container Apps, Dapr, and microservices architecture, you can refer to the following resources:
 1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
-1. Microsoft Dapr documentation: [Dapr Documentation](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview)
 1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
 1. Bicep Documentation: [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
-
-
-
-[Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/modules/authenticate-azure-deployment-pipeline-service-principals/1-introduction)
+5. Bicep learning path [Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/paths/bicep-azure-pipelines/)

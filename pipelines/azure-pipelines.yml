@@ -8,7 +8,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
+  resourceGroup: 'introspect-2b-pipeline'  # Replace with your Azure resource group
   location: 'westeurope'  # Replace with your Azure region
   dockerRegistryServiceConnection: 'acr-connection'
   azureSubscription: 'azure-subscription'
@@ -29,8 +29,9 @@ stages:
       acrExists: false
       logAnalyticsExists: false
       containerEnvExists: false
-      #containerAppNameExist: false
+      containerAppNameExist: false
   jobs:
+  
   - job: CheckResources
     displayName: 'Check Resource Existence'
     steps:
@@ -45,7 +46,7 @@ stages:
           echo "Checking if resources exist..."
 
           # Check if ACR exists
-          acrNameExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
+          acrNameExists=$(az acr show --name $(containerRegistryName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "acrNameExists" ]; then
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
               echo "Azure Container Registry $(containerRegistryName) exists. Deployment will not proceed."
@@ -71,15 +72,15 @@ stages:
               echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
           fi
 
-          # check if Container App exists
-          # containerAppNameExist=$(az containerapp show --resource-group $(resourceGroup) --name $(imageRepository) --query "name" --output tsv 2>/dev/null || echo "")
-          # if [ -n "containerAppNameExist" ]; then
-          #       echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
-          #       echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
-          #       exit 1
-          #   else
-          #       echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
-          #   fi
+          # Check if COntainer App exists
+          check if Container App exists
+          containerAppNameExist=$(az containerapp show --name $(imageRepository) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
+          if [ -n "containerAppNameExist" ]; then
+             echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
+             echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
+          else
+             echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
+          fi
   - job: Values
     displayName: 'Display Values for Debugging'
     dependsOn: CheckResources
@@ -87,13 +88,13 @@ stages:
         acrExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]
         logAnalyticsExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
         containerEnvExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
-        #containerAppNameExist: $[ dependencies.CheckResources.outputs['passOutput.containerAppExist'] ]
+        containerAppNameExist: $[ dependencies.CheckResources.outputs['passOutput.containerAppExist'] ]
     steps:
     - script: |
         echo "ACR Exists: $(acrExists)"
         echo "Log Analytics Exists: $(logAnalyticsExists)"
         echo "Container Environment Exists: $(containerEnvExists)"
-        #echo "Container App Exists: $(containerAppNameExist)"
+        echo "Container App Exists: $(containerAppNameExist)"
       displayName: 'Display Variables Values'
 
   - job: DeployACR
@@ -102,7 +103,7 @@ stages:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
       acrCheckExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]  
     dependsOn: CheckResources
-    condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
+    #condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
@@ -124,7 +125,7 @@ stages:
       logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
       logAnalyticsCheckExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
     dependsOn: CheckResources
-    condition: eq(variables.logAnalyticsCheckExists, 'false')  # Run only if Log Analytics does not exist
+    #condition: eq(variables.logAnalyticsCheckExists, 'false')  # Run only if Log Analytics does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Log Analytics Workspace'
@@ -162,7 +163,7 @@ stages:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
       containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-    condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
+    #condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Container Environment'
