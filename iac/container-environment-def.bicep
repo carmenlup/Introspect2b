@@ -4,6 +4,13 @@ param location string
 @description('The name of the Azure Container Apps environment')
 param containerEnvironmentName string // value received from command parameters
 
+@description('The name of the Azure Log Analytics workspace')
+param logAnalyticsWorkspaceName string // value received from command parameters
+
+resource logAnalyticsWorkspace 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+  name: logAnalyticsWorkspaceName
+}
+
 resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2025-02-02-preview' = {
   name: containerEnvironmentName
   location: location
@@ -12,7 +19,7 @@ resource containerAppEnvironment 'Microsoft.App/managedEnvironments@2025-02-02-p
       destination: 'log-analytics'
       logAnalyticsConfiguration: {
         customerId: logAnalyticsWorkspace.properties.customerId
-        //sharedKey: logAnalyticsWorkspace.properties.sharedKeys.primarySharedKey
+        sharedKey: logAnalyticsWorkspace.listKeys().primarySharedKey
         dynamicJsonColumns: false
       }
     }
