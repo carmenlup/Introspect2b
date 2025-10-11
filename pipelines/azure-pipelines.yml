@@ -25,13 +25,13 @@ stages:
       containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
       logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
+      acrExists: false
+      logAnalyticsExists: false
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
     outputs:       
       acrExists: $(acrExists)
-      logAnalyticsExists: $(logAnalyticsExists)
-      containerEnvExists: $(containerEnvExists)
     steps:
     - task: AzureCLI@2
       displayName: 'Check if Resources Exist'
@@ -46,6 +46,7 @@ stages:
           acrExists=$(az acr show --name $(containerRegistryName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "$acrExists" ]; then
               echo "##vso[task.setvariable variable=acrExists]true"
+              echo "acrExists value: $(acrExists)"
               echo "Azure Container Registry $(containerRegistryName) exists."
           else
               echo "##vso[task.setvariable variable=acrExists]false"
@@ -60,7 +61,7 @@ stages:
               echo "LogAnalyticsExists value: $(logAnalyticsExists)"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists."
           else
-              logAnalyticsExists=false
+              #logAnalyticsExists=false
               echo "LogAnalyticsExists value: $(logAnalyticsExists)"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist."
           fi
