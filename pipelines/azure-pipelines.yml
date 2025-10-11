@@ -128,24 +128,39 @@ stages:
   - job: DeployContainerEnvironment
     displayName: 'Deploy Container Environment if not exists'
     variables:
-      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
-      containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
+      azure-subscription: 'azure-subscription'
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
     condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
-    - task: AzureCLI@2
-      displayName: 'Deploy Container Environment'
+    - task: AzureContainerApps@1
       inputs:
-        azureSubscription: 'azure-subscription'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
-          echo "Deploying Container Environment $(containerEnvironmentName)..."
-          az deployment group create \
-            --resource-group $(resourceGroup) \
-            --template-file $(containerEnvBicepFile) \
-            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+        appSourcePath: '$(Build.SourcesDirectory)/ClaimStatus'
+        azureSubscription: variables.azure-subscription
+        acrName: 'introspect2bacr'
+        containerAppName: 'claim-status-app'
+        resourceGroup: '$(resourceGroup)'
+      
+  # - job: DeployContainerEnvironment
+  #   displayName: 'Deploy Container Environment if not exists'
+  #   variables:
+  #     containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
+  #     containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
+  #   dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
+  #   condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
+  #   steps:
+  #   - task: AzureCLI@2
+  #     displayName: 'Deploy Container Environment'
+  #     inputs:
+  #       azureSubscription: 'azure-subscription'
+  #       scriptType: 'bash'
+  #       scriptLocation: 'inlineScript'
+  #       inlineScript: |
+  #         echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
+  #         echo "Deploying Container Environment $(containerEnvironmentName)..."
+  #         az deployment group create \
+  #           --resource-group $(resourceGroup) \
+  #           --template-file $(containerEnvBicepFile) \
+  #           --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
   
 - stage: Build
   displayName: 'Build and Push Image'
