@@ -68,6 +68,19 @@ stages:
           else
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
+  - job: Values
+    displayName: 'Display Values for Debugging'
+    dependsOn: CheckResources
+    variables:
+        acrExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]
+        logAnalyticsExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
+        containerEnvExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
+    steps:
+    - script: |
+        echo "ACR Exists: $(acrExists)"
+        echo "Log Analytics Exists: $(logAnalyticsExists)"
+        echo "Container Environment Exists: $(containerEnvExists)"
+      displayName: 'Display Variables Values'
 
   - job: DeployACR
     displayName: 'Deploy ACR if not exists'
@@ -77,6 +90,7 @@ stages:
     dependsOn: CheckResources
     condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
     steps:
+    
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
       inputs:
