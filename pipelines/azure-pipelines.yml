@@ -81,7 +81,10 @@ stages:
     displayName: 'Deploy ACR if not exists'
     variables:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
+
     dependsOn: CheckResources
+    variables:
+    myVarFromJobA: $[ dependencies.A.outputs['passOutput.acrExists'] ]  
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
@@ -91,12 +94,13 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          echo "this is from prev job: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]"
-          echo "Deploying Azure Container Registry $(containerRegistryName)..."
-          az deployment group create \
-            --resource-group $(resourceGroup) \
-            --template-file $(acrBicepFile) \
-            --parameters containerRegistryName=$(containerRegistryName) location=$(location)
+          echo "this is from prev job: $[ dependencies.CheckResources.outputs['passOutput.acrExists' ]]"
+          echo "this is from prev job variable: $(myVarFromJobA)"
+          # echo "Deploying Azure Container Registry $(containerRegistryName)..."
+          # az deployment group create \
+          #   --resource-group $(resourceGroup) \
+          #   --template-file $(acrBicepFile) \
+          #   --parameters containerRegistryName=$(containerRegistryName) location=$(location)
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
