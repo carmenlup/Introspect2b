@@ -87,7 +87,7 @@ stages:
       myVarFromJobAxxx: $[ dependencies.CheckResources.outputs['CheckResources.acrExists'] ]  
       myVarFromJobAxxx2222: $[dependencies.CheckResources.outputs['CheckResources.acrExists']]  
     dependsOn: CheckResources
-    condition: eq($(myVarFromJobA2222), 'false')  # Run only if ACR does not exist
+    condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
@@ -99,7 +99,7 @@ stages:
           echo "this is from prev job: $[ dependencies.CheckResources.outputs['passOutput.acrExists' ]]"
           echo "this is from prev job XXXX: $[dependencies.CheckResources.outputs['passOutput.acrExists']]"
           echo "this is from prev job variable: $(myVarFromJobA)"
-          echo "this is from prev job myVarFromJobA2222: $(myVarFromJobA2222)"
+          echo "this is from prev job variable2222: $(myVarFromJobA2222)"
           echo "this is from prev job variablexxx: $(myVarFromJobAxxx)"
           echo "this is from prev job variablexxx2222: $(myVarFromJobAxxx2222)"
           echo "check $[dependencies.CheckResources.outputs['passOutput']"
