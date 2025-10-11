@@ -107,7 +107,7 @@ stages:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
       myVarFromJobA222233: $[dependencies.CheckResources.outputs['passOutput.acrExists']]  #ok
     dependsOn: CheckResources
-    condition: eq(myVarFromJobA2222, 'false')  # Run only if ACR does not exist
+    condition: eq(myVarFromJobA222233, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
@@ -119,6 +119,7 @@ stages:
           echo "check if this steprun or not cond with variable: $(myVarFromJobA222233)"
           echo "this is from prev job myVarFromJobA222233: $(myVarFromJobA222233)"
           echo "check $[dependencies.CheckResources.outputs['passOutput']"
+
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
     variables:
