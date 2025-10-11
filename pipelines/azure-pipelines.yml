@@ -128,10 +128,8 @@ stages:
   
   - job: DeployContainerEnvironment
     displayName: 'Deploy Container Environment if not exists'
-    variables:
-      azure-subscription: 'azure-subscription'
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-    condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
+    #condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureContainerApps@1
       inputs:
