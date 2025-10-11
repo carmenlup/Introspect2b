@@ -26,8 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "iac", "iac", "{2FD8EE9C-96F
 	ProjectSection(SolutionItems) = preProject
 		iac\aca-deploy.bicep = iac\aca-deploy.bicep
 		iac\acr-deploy.bicep = iac\acr-deploy.bicep
-		continer-envitonment-def.bicep = continer-envitonment-def.bicep
 		iac\log-analytics-workspace-def.bicep = iac\log-analytics-workspace-def.bicep
+		container-environment-def.bicep = container-environment-def.bicep
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{B03AD8A5-17A1-4E96-A1BA-895937254ECD}"

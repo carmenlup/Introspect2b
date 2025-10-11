@@ -8,18 +8,23 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
+  resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
+  location: 'westeurope'  # Replace with your Azure region
   dockerRegistryServiceConnection: 'acr-connection'
   imageRepository: 'claimstatus'
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/ClaimStatus/Dockerfile'
   tag: '$(Build.BuildId)'
   imageName: '$(containerRegistry)/$(imageRepository):latest'  # Full image name with tag
-  resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
-  location: 'westeurope'  # Replace with your Azure region
+  
 
 stages:
 - stage: DeployMandatoryResources
   displayName: 'Deploy Mandatory Resources'
+  variables:
+      containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
+      logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
+      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
@@ -65,6 +70,8 @@ stages:
 
   - job: DeployACR
     displayName: 'Deploy ACR if not exists'
+    variables:
+      acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
     dependsOn: CheckResources
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
@@ -83,6 +90,8 @@ stages:
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
+    variables:
+      logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
     dependsOn: CheckResources
     condition: eq(variables.logAnalyticsExists, 'false')  # Run only if Log Analytics does not exist
     steps:
@@ -101,6 +110,8 @@ stages:
   
   - job: DeployContainerEnvironment
     displayName: 'Deploy Container Environment if not exists'
+    variables:
+      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
     condition: eq(variables.containerEnvExists, 'false')  # Run only if Container Environment does not exist
     steps:
@@ -119,13 +130,14 @@ stages:
   
 - stage: DeployMandatoryResources1
   displayName: 'Deploy Azure Container Registry'
-  condition: false
+  
   variables:
     containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
     acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
   jobs:
   - job: 'DeployACR'
     displayName: 'Deploy ACR if not exists'
+    condition: false
     steps:
     - task: AzureCLI@2
       displayName: 'Check and Create ACR if not exists'
@@ -157,6 +169,7 @@ stages:
           fi 
   - job: 'DeployLogAnalytics'
     displayName: 'Deploy Log Analytics if not exists'
+    condition: false
     variables:
       logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
       logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
@@ -186,7 +199,7 @@ stages:
   - job: 'DeployContainerEnvironment'
     displayName: 'Deploy Container Environment if not exists'
     variables:
-      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/continer-envitonment-def.bicep'  # Path to the Bicep file
+      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
     steps:
      - task: AzureCLI@2
