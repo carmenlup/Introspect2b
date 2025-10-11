@@ -63,18 +63,13 @@ stages:
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
 
-- job: DeployACR
-  displayName: 'Deploy ACR if not exists'
-  dependsOn: CheckResources
-  condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
-  steps:
-  - task: AzureCLI@2
+  - job: DeployACR
     displayName: 'Deploy ACR if not exists'
     dependsOn: CheckResources
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
-      displayName: 'Deploy Azure Container Registry'
+      displayName: 'Deploy ACR if not exists'
       inputs:
         azureSubscription: 'azure-subscription'
         scriptType: 'bash'
@@ -85,44 +80,44 @@ stages:
             --resource-group $(resourceGroup) \
             --template-file $(acrBicepFile) \
             --parameters containerRegistryName=$(containerRegistryName) location=$(location)
-
-- job: DeployLogAnalytics
-  displayName: 'Deploy Log Analytics if not exists'
-  dependsOn: CheckResources
-  condition: eq(variables.logAnalyticsExists, 'false')  # Run only if Log Analytics does not exist
-  steps:
-  - task: AzureCLI@2
-    displayName: 'Deploy Log Analytics Workspace'
-    inputs:
-      azureSubscription: 'azure-subscription'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        echo "Deploying Log Analytics Workspace $(logAnalyticsWorkspaceName)..."
-        az deployment group create \
-          --resource-group $(resourceGroup) \
-          --template-file $(logAnalyticsBicepFile) \
-          --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
-
-- job: DeployContainerEnvironment
-  displayName: 'Deploy Container Environment if not exists'
-  dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-  condition: eq(variables.containerEnvExists, 'false')  # Run only if Container Environment does not exist
-  steps:
-  - task: AzureCLI@2
-    displayName: 'Deploy Container Environment'
-    inputs:
-      azureSubscription: 'azure-subscription'
-      scriptType: 'bash'
-      scriptLocation: 'inlineScript'
-      inlineScript: |
-        echo "Deploying Container Environment $(containerEnvironmentName)..."
-        az deployment group create \
-          --resource-group $(resourceGroup) \
-          --template-file $(containerEnvBicepFile) \
-          --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
-
-- stage: DeployMandatoryResources
+  
+  - job: DeployLogAnalytics
+    displayName: 'Deploy Log Analytics if not exists'
+    dependsOn: CheckResources
+    condition: eq(variables.logAnalyticsExists, 'false')  # Run only if Log Analytics does not exist
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Deploy Log Analytics Workspace'
+      inputs:
+        azureSubscription: 'azure-subscription'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Deploying Log Analytics Workspace $(logAnalyticsWorkspaceName)..."
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(logAnalyticsBicepFile) \
+            --parameters logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) location=$(location)
+  
+  - job: DeployContainerEnvironment
+    displayName: 'Deploy Container Environment if not exists'
+    dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
+    condition: eq(variables.containerEnvExists, 'false')  # Run only if Container Environment does not exist
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Deploy Container Environment'
+      inputs:
+        azureSubscription: 'azure-subscription'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          echo "Deploying Container Environment $(containerEnvironmentName)..."
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(containerEnvBicepFile) \
+            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+  
+- stage: DeployMandatoryResources1
   displayName: 'Deploy Azure Container Registry'
   condition: false
   variables:
