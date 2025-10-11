@@ -81,10 +81,8 @@ stages:
     displayName: 'Deploy ACR if not exists'
     variables:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
-
+      myVarFromJobA: $[ dependencies.A.outputs['passOutput.acrExists'] ]  
     dependsOn: CheckResources
-    variables:
-    myVarFromJobA: $[ dependencies.A.outputs['passOutput.acrExists'] ]  
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
