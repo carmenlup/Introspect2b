@@ -32,6 +32,7 @@ stages:
     displayName: 'Check Resource Existence'
     steps:
     - task: AzureCLI@2
+      name: passOutput
       displayName: 'Check if Resources Exist'
       inputs:
         azureSubscription: 'azure-subscription'
@@ -74,7 +75,7 @@ stages:
               echo "ContainerEnvExists value: $(containerEnvExists)"
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
-        name: passOutput
+        
     
 
   - job: DeployACR
