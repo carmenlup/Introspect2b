@@ -51,12 +51,13 @@ stages:
           # Check if Log Analytics exists
           logAnalyticsExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "$logAnalyticsExists" ]; then
-              echo "##vso[task.setvariable variable=logAnalyticsExists]true"
+              logAnalyticsExists=true
               # print logAnalyticsExists value for debugging
               echo "LogAnalyticsExists value: $(logAnalyticsExists)"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists."
           else
-              echo "##vso[task.setvariable variable=logAnalyticsExists]false"
+              logAnalyticsExists=false
+              echo "LogAnalyticsExists value: $(logAnalyticsExists)"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist."
           fi
 
@@ -71,6 +72,10 @@ stages:
               echo "ContainerEnvExists value: $(containerEnvExists)"
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
+    outputs:       
+      acrExists: $(acrExists)
+      logAnalyticsExists: $(logAnalyticsExists)
+      containerEnvExists: $(containerEnvExists)
 
   - job: DeployACR
     displayName: 'Deploy ACR if not exists'
