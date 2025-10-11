@@ -82,12 +82,9 @@ stages:
     displayName: 'Deploy ACR if not exists'
     variables:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
-      myVarFromJobA: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]  
-      myVarFromJobA2222: $[dependencies.CheckResources.outputs['passOutput.acrExists']]  #ok
-      myVarFromJobAxxx: $[ dependencies.CheckResources.outputs['CheckResources.acrExists'] ]  
-      myVarFromJobAxxx2222: $[dependencies.CheckResources.outputs['CheckResources.acrExists']]  
+      acrCheckExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]  
     dependsOn: CheckResources
-    condition: eq(variables.myVarFromJobA, 'false')  # Run only if ACR does not exist
+    condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
@@ -96,25 +93,19 @@ stages:
         scriptType: 'bash'
         scriptLocation: 'inlineScript'
         inlineScript: |
-          echo "this is from prev job: $[ dependencies.CheckResources.outputs['passOutput.acrExists' ]]"
-          echo "this is from prev job XXXX: $[dependencies.CheckResources.outputs['passOutput.acrExists']]"
-          echo "this is from prev job variable: $(myVarFromJobA)"
-          echo "this is from prev job variable2222: $(myVarFromJobA2222)"
-          echo "this is from prev job variablexxx: $(myVarFromJobAxxx)"
-          echo "this is from prev job variablexxx2222: $(myVarFromJobAxxx2222)"
-          echo "check $[dependencies.CheckResources.outputs['passOutput']"
-          # echo "Deploying Azure Container Registry $(containerRegistryName)..."
-          # az deployment group create \
-          #   --resource-group $(resourceGroup) \
-          #   --template-file $(acrBicepFile) \
-          #   --parameters containerRegistryName=$(containerRegistryName) location=$(location)
+          echo "Deploying Azure Container Registry $(containerRegistryName)..."
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(acrBicepFile) \
+            --parameters containerRegistryName=$(containerRegistryName) location=$(location)
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
     variables:
       logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
+      logAnalyticsCheckExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
     dependsOn: CheckResources
-    condition: eq(variables.logAnalyticsExists, 'false')  # Run only if Log Analytics does not exist
+    condition: eq(variables.logAnalyticsCheckExists, 'false')  # Run only if Log Analytics does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Log Analytics Workspace'
@@ -133,8 +124,9 @@ stages:
     displayName: 'Deploy Container Environment if not exists'
     variables:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
+      containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-    condition: eq(variables.containerEnvExists, 'false')  # Run only if Container Environment does not exist
+    condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Container Environment'
