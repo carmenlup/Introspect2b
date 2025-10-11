@@ -90,22 +90,22 @@ stages:
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
     steps:
      - task: AzureCLI@2
-      displayName: 'Check if Container Environment exists'
-      inputs:
-        azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
-          appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
-          
-          if [ -n "$appExists" ]; then
-              echo "##vso[task.setvariable variable=containerAppExists]true"
-              echo "Container Environment $(containerEnvironmentName) exists."
-          else
-              echo "##vso[task.setvariable variable=containerAppExists]false"
-              echo "Container Environment $(containerEnvironmentName) does not exist."
-          fi
+       displayName: 'Check if Container Environment exists'
+       inputs:
+         azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+         scriptType: 'bash'
+         scriptLocation: 'inlineScript'
+         inlineScript: |
+           echo "Checking if Container Environment resource exists: $(containerEnvironmentName)"
+           appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
+           
+           if [ -n "$appExists" ]; then
+               echo "##vso[task.setvariable variable=containerAppExists]true"
+               echo "Container Environment $(containerEnvironmentName) exists."
+           else
+               echo "##vso[task.setvariable variable=containerAppExists]false"
+               echo "Container Environment $(containerEnvironmentName) does not exist."
+           fi
 
      - task: AzureCLI@2
        displayName: 'Run Task if Container Environment exists'
