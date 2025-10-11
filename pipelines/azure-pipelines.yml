@@ -64,6 +64,11 @@ stages:
           fi
 
 - job: DeployACR
+  displayName: 'Deploy ACR if not exists'
+  dependsOn: CheckResources
+  condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
+  steps:
+  - task: AzureCLI@2
     displayName: 'Deploy ACR if not exists'
     dependsOn: CheckResources
     condition: eq(variables.acrExists, 'false')  # Run only if ACR does not exist
