@@ -58,7 +58,7 @@ stages:
   - job: 'DeployLogAnalytics'
     displayName: 'Deploy Log Analytics if not exists'
     variables:
-      logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesy.bicep'  # Path to the Bicep file
+      logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
       logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
     steps:
     - task: AzureCLI@2
@@ -86,11 +86,11 @@ stages:
   - job: 'DeployContainerEnvironment'
     displayName: 'Deploy Container Environment if not exists'
     variables:
-      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy-prerequisitesx.bicep'  # Path to the Bicep file
+      containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/continer-envitonment-def.bicep'  # Path to the Bicep file
       containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
     steps:
-    - task: AzureCLI@2
-      displayName: 'Check and Create Container Environment if not exists'
+     - task: AzureCLI@2
+      displayName: 'Check if Container Environment exists'
       inputs:
         azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
         scriptType: 'bash'
@@ -100,16 +100,27 @@ stages:
           appExists=$(az containerapp env show --resource-group $(resourceGroup) --name $(containerEnvironmentName) --query "name" --output tsv 2>/dev/null || echo "")
           
           if [ -n "$appExists" ]; then
-              echo "Container Environment $(containerEnvironmentName) already exists. Deployment will not proceed."
-              #exit 1
+              echo "##vso[task.setvariable variable=containerAppExists]true"
+              echo "Container Environment $(containerEnvironmentName) exists."
           else
-              echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
-              # Deploy the Container Environment using the Bicep template
-              az deployment group create \
-              --resource-group $(resourceGroup) \
-              --template-file $(containerEnvBicepFile) \
-              --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
+              echo "##vso[task.setvariable variable=containerAppExists]false"
+              echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
+
+     - task: AzureCLI@2
+       displayName: 'Run Task if Container Environment exists'
+       condition: eq(variables.containerAppExists, 'true')  # Run only if containerAppExists is true
+       inputs:
+         azureSubscription: 'azure-subscription'  # Replace with your Azure service connection name
+         scriptType: 'bash'
+         scriptLocation: 'inlineScript'
+         inlineScript: |
+           echo "Container Environment exists. Proceeding with deployment."
+           # Add your deployment logic here
+           az deployment group create \
+             --resource-group $(resourceGroup) \
+             --template-file $(containerEnvBicepFile) \
+             --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
 
 - stage: Build
   displayName: 'Build and Push Image'
