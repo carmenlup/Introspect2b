@@ -28,6 +28,10 @@ stages:
   jobs:
   - job: CheckResources
     displayName: 'Check Resource Existence'
+    outputs:       
+      acrExists: $(acrExists)
+      logAnalyticsExists: $(logAnalyticsExists)
+      containerEnvExists: $(containerEnvExists)
     steps:
     - task: AzureCLI@2
       displayName: 'Check if Resources Exist'
@@ -72,10 +76,7 @@ stages:
               echo "ContainerEnvExists value: $(containerEnvExists)"
               echo "Container Environment $(containerEnvironmentName) does not exist."
           fi
-    outputs:       
-      acrExists: $(acrExists)
-      logAnalyticsExists: $(logAnalyticsExists)
-      containerEnvExists: $(containerEnvExists)
+    
 
   - job: DeployACR
     displayName: 'Deploy ACR if not exists'
