@@ -227,8 +227,8 @@ The deployment process involves several steps to ensure that the ClaimStatus API
 The deployment process involves the following steps:
 
 1. **Connect to Github Repository**: The source code for the ClaimStatus is hosted in a GitHub repository, which is connected to Azure DevOps for continuous integration and deployment (CI/CD).
-1. **Build and Push Docker Images to ACR**: The microservice images are built and pushed to an Azure Container Registry (ACR) for secure storage and management.
-1. **Deploy to Azure Container Apps (ACA)**: The microservices are deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
+1. **Build and Push Docker Images to ACR**: The solution images is built and pushed to an Azure Container Registry (ACR) for secure storage and management.
+1. **Deploy to Azure Container Apps (ACA)**: The ClaimStatus API is deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
 1. **Set Up CI/CD Pipeline in Azure DevOps**: An automated CI/CD pipeline is created in Azure DevOps to streamline the build, test, and deployment processes.
 
 Below are the detailed steps for the deployment process.
@@ -236,9 +236,9 @@ Below are the detailed steps for the deployment process.
 ## Prerequisites
 
 Few prerequisites are needed before starting the deployment process:
-**Azure Portal**: Ensure you create create a resource group named `introspect-2-b` in West Europe region to host the resources.
-**Azure DevOps Setup**: Setup described in the next section
-**GitHub Repository**: The source code for the ClaimStatus should be hosted in a GitHub repository.
+1. **Azure Portal**: Ensure you create create a resource group named `introspect-2-b` in West Europe region to host the resources.
+2. **Azure DevOps Setup**: Setup described in the next section
+3. **GitHub Repository**: The source code for the ClaimStatus should be hosted in a GitHub repository.
 
 ## 2. Azure DevOps Setup
 
@@ -253,8 +253,8 @@ Documentation link: [Create a project](https://learn.microsoft.com/en-us/azure/d
 
 ##### 2.2. Setup GitHub connection
 
-- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
-- Click on "New service connection" and select "GitHub".
+- In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
+- Click on `New service connection` and select `GitHub`.
 - Authenticate with your GitHub account and authorize Azure DevOps to access your repositories.
 
 Documentation link: [Connect to GitHub](https://learn.microsoft.com/en-us/azure/devops/boards/github/connect-to-github?view=azure-devops)
@@ -263,8 +263,8 @@ Documentation link: [Connect to GitHub](https://learn.microsoft.com/en-us/azure/
 
 This will ensure that Azure DevOps can deploy resources to your Azure subscription.
 
-- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
-- Click on "New service connection" and select "Azure Resource Manager".
+- In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
+- Click on `New service connection` and select `Azure Resource Manager`.
 - Connect using the service principal (automatic) option and follow the prompts to authenticate and authorize Azure DevOps.
 - Select the subscription and resource group `introspect-2-b` created on step 2.2.
 - Use `azure-connection` for service connection name and save it.
@@ -275,9 +275,9 @@ Documentation link [Service connections](https://learn.microsoft.com/en-us/azure
 
 ##### 2.3. Create secure connection to Azure Container Registry (ACR)
 
-- In your Azure DevOps project, navigate to "Project Settings" > "Service connections".
-- Click on "New service connection" and select "Docker Registry".
-- Select "Azure Container Registry" as the registry type.
+- In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
+- Click on `New service connection` and select "Docker Registry".
+- Select `Azure Container Registry` as the registry type.
 - Select the subscription and the ACR instance `introspect2bacr` created on step 1.3.
 - Use `acr-connection` for service connection name and save it.
 
@@ -288,13 +288,17 @@ This section provides instructions for deploying the ClaimStatus to Azure Contai
 1. Create a new pipeline in Azure DevOps
 
    - Go to your Azure DevOps project and navigate to the Pipelines section.
-   - Click on "New Pipeline" and select "Azure Repos Git" as the source.
-     Repository is in Github so select GitHub and authenticate if needed.
-
+   - Click on `New Pipeline` and select `Azure Repos Git` as the source.
+   -  Repository is in Github so select GitHub and authenticate if needed.
    - Select your repository containing the microservices code.
-   - Choose "Starter pipeline" and replace the default YAML with the following configuration:
+   - Choose `Select an existing YAML file` and select the path to the pipeline in the repo which is `/pipelines/azure-pipelines.yml` like in immage below:
+   [PipelineCrerate](Images/CreateAndRunPipeline.jpg)
+   - press Continue button
+   - press Run button to create and run the pipeline
 
-```yaml
+
+Now you sould be able to see the azure-pypeline.yaml definition
+
 
 
 
