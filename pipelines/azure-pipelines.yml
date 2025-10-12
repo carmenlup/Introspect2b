@@ -25,7 +25,7 @@ stages:
   variables:
       containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
       logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
-      containerEnvironmentName: 'claimstatus-container-app-env2'  # Name of your Container Environment
+      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
       acrExists: false
       logAnalyticsExists: false
       containerEnvExists: false
