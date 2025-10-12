@@ -8,7 +8,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  resourceGroup: 'introspect-2b-pipeline'  # Replace with your Azure resource group
+  resourceGroup: 'introspect-2-b'  # Replace with your Azure resource group
   location: 'westeurope'  # Replace with your Azure region
   dockerRegistryServiceConnection: 'acr-connection'
   azureSubscription: 'azure-subscription'

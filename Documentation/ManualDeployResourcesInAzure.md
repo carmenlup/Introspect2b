@@ -87,15 +87,15 @@ docker push introspect2bacr.azurecr.io/claimstatus:latest
 
 8. Check the deployment status in the Azure Portal. 
 It may take a few minutes for the Container App to be created and the container to be deployed.
-After resource was deployed check your `productservice-app` Container App and make sure it is running:
-- Go to the `productservice-app` resource in Azure Portal.
-- Copy the URL from the Overview tab and replace `<productappURL>`in the link below
+After resource was deployed check your `claim-status-app` Container App and make sure it is running:
+- Go to the `claim-status-app` resource in Azure Portal.
+- Copy the URL from the Overview tab and replace `<calimstatusURL>`in the link below
 ```
-<productappURL>/swagger/index.html
+<calimstatusURL>/swagger/index.html
 ```
 Your link sould look like this:
 ```
-https://productservice-app.jollypond-a6f1a425.westeurope.azurecontainerapps.io/swagger/index.html
+https://claim-status-app.delightfulmoss-58bb48c4.westeurope.azurecontainerapps.io/swagger/index.html
 ```
 - 
 
