@@ -20,6 +20,10 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=runapifromdocker # NOTE: This is the default password for dotnet dev-certs
       # 3. Tell Kestrel to allow insecure HTTP on 8030 (optional, but standard practice)
       - ASPNETCORE_HTTP_PORTS=8030
+      - OpenAiConfig__Endpoint=${OPENAI_ENDPOINT}
+      - OpenAiConfig__DeploymentName=${OPENAI_DEPLOYMENT}
+      - OpenAiConfig__ApiKey=${OPENAI_APIKEY}
+
     volumes:
       # ----------------------------------------------------
       # Volume Mount for Windows Host Certificate (Handles Spaces via Variable)

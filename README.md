@@ -61,12 +61,14 @@ Introspect2b					# Solution folder
 │   ├── queries.kql
 │   └── sample-screenshots
 │       └── observability-example.png
-└── README.md					# Documentation for the solution
+├── docker-compose.yaml		# Docker Compose file for building and running containers
+├── .env			# Environment variable file for secrets and configuration used by Docker Compose
+└── README.md			# Documentation for the solution
 ```
 
 - TBRemovedLATER - ClaimStatus/ — service source + Dockerfile.
 - TBRemovedLATER - mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
-- apim/ — APIM policy files or export.
+- TBRemovedLATER apim/ — APIM policy files or export.
 - iac/ — Bicep/Terraform templates.
 - TBRemovedLATER- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
 - scans/ — link/screenshots to Defender findings
@@ -98,9 +100,12 @@ For more details about implementation steps, and Testing please refer to the [Cl
 3. Visual Studio 2022 or later with .NET Core SDK installed. You can download it from [Visual Studio Downloads](https://visualstudio.microsoft.com/downloads/).
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
-   - Make sure to note down the endpoint URL and API key for later use.
+   
+	<span style="color:red">❗️ <b>Important:</b></span> Make sure to note down the endpoint URL and API key for later use.
+	
+	- Make sure to note down the endpoint URL and API key for later use.
 
-## Run and Test the ClaimStatus API Locally
+## Run and Test the ClaimStatus API Locally Without Docker
 
 ClaimStatus API is a simple ASP.NET Core Web API application that provides endpoints to get claim status and summarize claim notes using Azure OpenAI.
 It provide a secure configuration using user-secrets for local development.
@@ -116,7 +121,6 @@ It provide a secure configuration using user-secrets for local development.
        "Endpoint:": "replace with YOUR-OPENAI_ENDPOINTURL",
        "DeploymentName": "replace with your OpenAI deployment name created at Preresuisites point 5 ",
        "ApiKey": "replace with YOUR-OPENAI-APIKey"
-     }
    }
    ```
 
@@ -127,6 +131,9 @@ It provide a secure configuration using user-secrets for local development.
 
 ## Run and Test the Solution from Docker on Local machine
 
+1. Open .env file from source folder and and update your configuration as is mentioned
+```
+```
 1. Open a terminal under solution folder run docker compose up command to build and run the microservices in Docker containers:
    ```powershell
    docker compose up --build
