@@ -101,7 +101,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
    
-	❗️ $\mathsf{\color{red}Important:}$ Make sure to note down the endpoint URL and API key for later use.
+	❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
 
 ## Run and Test the ClaimStatus API Locally Without Docker
 
