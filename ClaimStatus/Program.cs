@@ -1,6 +1,16 @@
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
+// Add CORS policy
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
+    {
+        policy.AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+    });
+});
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -21,17 +31,6 @@ builder.Services.AddSwaggerGen(c =>
     c.UseInlineDefinitionsForEnums(); // Optional: Helps with Swagger 2.0 compatibility
 });
 
-// Add CORS policy
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll", policy =>
-    {
-        policy.AllowAnyOrigin()
-            .AllowAnyMethod()
-            .AllowAnyHeader();
-    });
-});
-
 var app = builder.Build();
 // Use CORS
 app.UseCors("AllowAll");
@@ -44,7 +43,9 @@ app.UseSwaggerUI(c =>
 
 // Configure the HTTP request pipeline.
 
+// Comment UseHttpsRedirection for testing with HTTP
 app.UseHttpsRedirection();
+
 app.UseAuthorization();
 app.MapControllers();
 

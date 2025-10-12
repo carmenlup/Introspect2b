@@ -104,7 +104,7 @@ stages:
       acrBicepFile: '$(Build.SourcesDirectory)/iac/acr-deploy.bicep'  # Path to the Bicep file
       acrCheckExists: $[ dependencies.CheckResources.outputs['passOutput.acrExists'] ]  
     dependsOn: CheckResources
-    #condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
+    condition: eq(variables.acrCheckExists, 'false')  # Run only if ACR does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy ACR if not exists'
@@ -125,7 +125,7 @@ stages:
       logAnalyticsBicepFile: '$(Build.SourcesDirectory)/iac/log-analytics-workspace-def.bicep'  # Path to the Bicep file
       logAnalyticsCheckExists: $[ dependencies.CheckResources.outputs['passOutput.logAnalyticsExists'] ]
     dependsOn: CheckResources
-    #condition: eq(variables.logAnalyticsCheckExists, 'false')  # Run only if Log Analytics does not exist
+    condition: eq(variables.logAnalyticsCheckExists, 'false')  # Run only if Log Analytics does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Log Analytics Workspace'
@@ -147,7 +147,7 @@ stages:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
       containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-    #condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
+    condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Container Environment'

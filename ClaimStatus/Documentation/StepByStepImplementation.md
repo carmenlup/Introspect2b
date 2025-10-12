@@ -1,135 +1,160 @@
-# General Overview 
+# General Overview
+
 This document outlines the step-by-step implementation of the ClaimStatus API, including project creation, necessary implementations, and containerization using Docker.
 For simplicity, the implementation use a mocks dataset for both endpoints as follow:
+
 1. mocks/claims.json - contains a list of claims
 1. mocks/notes.json - contains a list of notes related to claims
 
-
 ## Endpoints
+
 1. GetClaimById - Retrieves a claim status by its unique identifier.
-1. SummarizeClaims - Provides a summary of all claim statuses integrated with OpenAI,  
+1. SummarizeClaims - Provides a summary of all claim statuses integrated with OpenAI,
 
 ## Step-by-Step Implementation
+
 ## Create the project
+
 ### 1. Create a new ASP.NET Core Web API project from Visual Studio or using the .NET CLI.
+
 - If using Visual Studio:
-	- Open Visual Studio -> File -> New -> Project.
-	- Select "ASP.NET Core Web Application" and click "Next".
-		- Set the location and solution name
-		- Name the soution `Itrospect1b`
-		- Name the project ClaimStatus
-		![AspDotNetCoreSol](Images/AspDotNetSolutionCreate.jpg "Create c# Solution")
-		- Click "Next".
-	- In the next dialog, ensure the next:
-	    - ".NET 8.0 (Long-term support)" is selected
-		- Authentication: None
-		- Ensure only HTTPS and Use controllers are checked for ASP.NET Core Web Api. We will add step by step the needed implementations
-		![AspDotNetCoreWebApi](Images/AspDotNetCoreWebApiProjectCreate.jpg "Create Asp.Net Core Web Api")
-		- Click "Create".
+  - Open Visual Studio -> File -> New -> Project.
+  - Select "ASP.NET Core Web Application" and click "Next".
+    - Set the location and solution name
+    - Name the soution `Itrospect1b`
+    - Name the project ClaimStatus
+      ![AspDotNetCoreSol](Images/AspDotNetSolutionCreate.jpg "Create c# Solution")
+    - Click "Next".
+  - In the next dialog, ensure the next:
+    - ".NET 8.0 (Long-term support)" is selected
+    - Authentication: None
+    - Ensure only HTTPS and Use controllers are checked for ASP.NET Core Web Api. We will add step by step the needed implementations
+      ![AspDotNetCoreWebApi](Images/AspDotNetCoreWebApiProjectCreate.jpg "Create Asp.Net Core Web Api")
+    - Click "Create".
+
 ### 2. Clenup the WetherForecast implementation
+
 - Delete the `WeatherForecast.cs` file from the root of the project.
 - Delete the `WeatherForecastController.cs` file from the `Controllers` folder.
 
 ### 3. Implement Claim controller thet contains GetClaim and SumarizeClaimNotes.
 
 #### 3.1 Create the Controllers
-- under the `Controllers` folder, create a new controller Empty controller named `ClaimsController.cs` 
+
+- under the `Controllers` folder, create a new controller Empty controller named `ClaimsController.cs`
 
 #### 3.2 Create mocks for endpoins
+
 - under Solution create a new folder named `mocks`
 - add two json files with the next content that containt 5 claims and 7 Notes
 
 #### 3.2 Create the Models
+
 - In the `ClaimStatus` project, create a new folder named `Models`.
 - Inside the `Models` folder, create the next classes
-	- `ClaimDetails.cs` which represents the details about a claim with the properties: Id, PolicyNumber, ClaimantName, Status, DateFiled, Amount.
-	
-	```csharp
-	namespace ClaimStatus.Models
-	{
-		public class ClaimDetail
-		{
-			[JsonPropertyName("Id")]
-			public int Id { get; set; }
 
-			[JsonPropertyName("PolicyNumber")]
-			public string PolicyNumber { get; set; }
+  - `ClaimDetails.cs` which represents the details about a claim with the properties: Id, PolicyNumber, ClaimantName, Status, DateFiled, Amount.
 
-			[JsonPropertyName("ClaimantName")]
-			public string ClaimantName { get; set; }
+  ```csharp
+  namespace ClaimStatus.Models
+  {
+  	public class ClaimDetail
+  	{
+  		[JsonPropertyName("Id")]
+  		public int Id { get; set; }
 
-			[JsonPropertyName("Status")]
-			public string Status { get; set; }
+  		[JsonPropertyName("PolicyNumber")]
+  		public string PolicyNumber { get; set; }
 
-			[JsonPropertyName("DateFiled")]
-			public string DateFiled { get; set; }
+  		[JsonPropertyName("ClaimantName")]
+  		public string ClaimantName { get; set; }
 
-			[JsonPropertyName("Amount")]
-			public decimal Amount { get; set; }
-		}
-	}
-	```
-    - `Claims.cs` which represents a collection of claims.`
-	```csharp
-	namespace ClaimStatus.Models
-	{
-		public class Claims
-		{
-			[JsonPropertyName("Claims")]
-			public List<ClaimDetail> ClaimsList { get; set; }
-		}
-	}
-	```
-	- 'Note.cs' which represents a note with the properties: Id, ClaimId, NoteText, CreatedAt.
-	```csharp
-	namespace ClaimStatus.Models
-	{
-		public class Note
-		{
-			[JsonPropertyName("Id")]
-			public int Id { get; set; }
+  		[JsonPropertyName("Status")]
+  		public string Status { get; set; }
 
-			[JsonPropertyName("ClaimId")]
-			public int ClaimId { get; set; }
+  		[JsonPropertyName("DateFiled")]
+  		public string DateFiled { get; set; }
 
-			[JsonPropertyName("NoteText")]
-			public string NoteText { get; set; }
+  		[JsonPropertyName("Amount")]
+  		public decimal Amount { get; set; }
+  	}
+  }
+  ```
 
-			[JsonPropertyName("CreatedAt")]
-			public DateTime CreatedAt { get; set; }
-		}
-	}
-	```
-	- `Notes.cs` which represents a collection of notes.
-	```csharp
-	namespace ClaimStatus.Models
-	{
-		public class Notes
-		{
-			[JsonPropertyName("Notes")]
-			public List<Note> NotesList { get; set; }
-		}
-	}
-	```  
+  - `Claims.cs` which represents a collection of claims.`
+
+  ```csharp
+  namespace ClaimStatus.Models
+  {
+  	public class Claims
+  	{
+  		[JsonPropertyName("Claims")]
+  		public List<ClaimDetail> ClaimsList { get; set; }
+  	}
+  }
+  ```
+
+  - 'Note.cs' which represents a note with the properties: Id, ClaimId, NoteText, CreatedAt.
+
+  ```csharp
+  namespace ClaimStatus.Models
+  {
+  	public class Note
+  	{
+  		[JsonPropertyName("Id")]
+  		public int Id { get; set; }
+
+  		[JsonPropertyName("ClaimId")]
+  		public int ClaimId { get; set; }
+
+  		[JsonPropertyName("NoteText")]
+  		public string NoteText { get; set; }
+
+  		[JsonPropertyName("CreatedAt")]
+  		public DateTime CreatedAt { get; set; }
+  	}
+  }
+  ```
+
+  - `Notes.cs` which represents a collection of notes.
+
+  ```csharp
+  namespace ClaimStatus.Models
+  {
+  	public class Notes
+  	{
+  		[JsonPropertyName("Notes")]
+  		public List<Note> NotesList { get; set; }
+  	}
+  }
+  ```
+
 ### 4 Add user-sectets to Program.cs
+
 - In the `ClaimStatus` project, open the `Program.cs` add to a new line after `var builder = WebApplication.CreateBuilder(args);` the next code:
+
 ```csharp
 builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 ```
 
 ### 5. Implement the ClaimsController
+
 Open the `ClaimsController.cs` file and implement the GetClaimById and SummarizeClaims endpoints as follow:
-#### GetClaimById: 
-This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found; 
+
+#### GetClaimById:
+
+This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found;
 
 ##### Response Types
+
 1. 200 OK - If the claim is found, it returns a 200 OK response with the claim details.
-Request: `GET /api/claims/{id}`
-Parameters: 
-	Name: id - The unique identifier of the claim to retrieve.
-	Tyepe: integer
-    Mandatory: Yes
-Response: 
+   Request: `GET /api/claims/{id}`
+   Parameters:
+   Name: id - The unique identifier of the claim to retrieve.
+   Tyepe: integer
+   Mandatory: Yes
+   Response:
+
 ```json
 {
   "Id": 1,
@@ -140,31 +165,48 @@ Response:
   "Amount": 1500
 }
 ```
+
 2. 400 Bad Request - If there is an error reading the claims file, it returns a 400 Bad Request response.
+
 ```json
 Invalid Id claim data provided.
 ```
 
 3. 404 Not Found - If the claim is not found, it returns a 404 Not Found response.
+
 ```
 Claim with ID 15 not found.
 ```
+
 4. 404 Not Found - If the mock data is missing
+
 ```
 Claims data set not found. Check if claim.json exist
 ```
+
 #### SummarizeClaims:
+
 This endpoint provides a summary of all claim notes. It reads notes from the `mocks/notes.json` file and summarizes them using OpenAI's gpt-4o-mini model.
 Implementation use the Open ai so package `Azure.AI.OpenAI` that you need to add to the project using NuGet Package Manager or .NET CLI.
+
 ##### Response Types
-1. 200 OK - If the summary is successfully generated, it returns a 200 OK response with the summary text.
-Request: `POST /api/claims/1/summarize`
-Parameters: 
-	Name: id - The unique identifier of the claim to retrieve.
-	Tyepe: integer
+
+1.  200 OK - If the summary is successfully generated, it returns a 200 OK response with the summary text.
+    Request: `POST /api/claims/1/summarize`
+    Parameters:
+    Name: id - The unique identifier of the claim to retrieve.
+    Tyepe: integer
     Mandatory: Yes
-Response type: 
-1. 200 Ok - if Notes exist for a particular ClamId
+    Body request:
+    Payload:
+    ```
+
+        ```
+
+    Response type:
+
+1.  200 Ok - if Notes exist for a particular ClamId
+
 ```
 
 {
@@ -174,7 +216,9 @@ Response type:
   "recommendation": "**Recommendation:**  \nFollow up with the claimant to ensure the requested additional information is provided promptly. Set a reminder for the review process to ensure that it resumes immediately after receipt of the needed details."
 }
 ```
+
 2. 200 OK - when Notes for a particular ClaimId does not exist
+
 ```
 {
   "claimId": 3,
@@ -183,22 +227,26 @@ Response type:
   "recommendation": "Recommendation: Please provide the claim notes for summarization and further recommendations."
 }
 ```
+
 3. 404 Not Found - If the mock data is missing
+
 ```
 Notes data not found for Claim Id 1. Check if notes.exist to path: C:\Introspect2b\mocks\notes.json
 ```
 
-
 ### 6. Add Swagger for API documentation and testing.
-   In the `OrderService` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
-   - If using Visual Studio, right-click on the project, select "Manage NuGet Packages", and search for `Swashbuckle.AspNetCore`.
-   - If using .NET CLI, run:
-	 ```powershell
-	 dotnet add package Swashbuckle.AspNetCore
-	 ``` 
+
+In the `OrderService` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
+
+- If using Visual Studio, right-click on the project, select "Manage NuGet Packages", and search for `Swashbuckle.AspNetCore`.
+- If using .NET CLI, run:
+  ```powershell
+  dotnet add package Swashbuckle.AspNetCore
+  ```
+
 ##### Replace code in Program.cs to configure Swagger and enable HTTPS redirection. Open `Program.cs` and replace the existing code with the following:
 
-``` csharp
+```csharp
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -229,27 +277,31 @@ app.Run();
 ```
 
 ### 7. Test implementation on local machine
+
 - Set `ClaimStatus` as the startup project in Visual Studio.
 - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
-![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
+  ![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
+## Containerization and run Claims
 
-## Containerization and run Claims 
-  
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.
 Open a terminal and use th following steps will guide you through the containerization process:
 
 ##### 1. Build Immage
+
 ```powershell
 docker build -f ClaimStatus/Dockerfile -t claimstatus:latest .
 ```
 
-##### 2. Create  Self-Signed Certificate
+##### 2. Create Self-Signed Certificate
+
 ```powershell
 dotnet dev-certs https -t -ep "$($env:USERPROFILE)\.aspnet\https\localdockercert.pfx" -p runapifromdocker
 ```
+
 ##### 3. Trust the certificate on your local machine
+
 ```powershell
 dotnet dev-certs https --trust
 ```
@@ -267,7 +319,9 @@ docker run -it --rm -p 8030:8030 -p 8031:8031 `
 ```
 
 ### Accessing the Order Service
+
 You can access the Order Service API at the following URL:
+
 ```
 https://localhost:8031/swagger/index.html
 http://localhost:8030/swagger/index.html
