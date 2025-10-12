@@ -48,8 +48,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{02EA68
 		Documentation\Images\AcaEnvironmentBasicsConfig.jpg = Documentation\Images\AcaEnvironmentBasicsConfig.jpg
 		Documentation\Images\ACAIngressConfig.jpg = Documentation\Images\ACAIngressConfig.jpg
 		Documentation\Images\BuildAndStartDockerOnLocal.jpg = Documentation\Images\BuildAndStartDockerOnLocal.jpg
+		Documentation\Images\CreateAndRunPipeline.jpg = Documentation\Images\CreateAndRunPipeline.jpg
 		Documentation\Images\HttpClaimStatusAPILocal.jpg = Documentation\Images\HttpClaimStatusAPILocal.jpg
 		Documentation\Images\HttpsClaimStatusAPILocal.jpg = Documentation\Images\HttpsClaimStatusAPILocal.jpg
+		Documentation\Images\PippelineRun.jpg = Documentation\Images\PippelineRun.jpg
 	EndProjectSection
 EndProject
 Global

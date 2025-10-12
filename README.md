@@ -100,9 +100,11 @@ For more details about implementation steps, and Testing please refer to the [Cl
 3. Visual Studio 2022 or later with .NET Core SDK installed. You can download it from [Visual Studio Downloads](https://visualstudio.microsoft.com/downloads/).
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
-   
-	❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
+
+   ❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
+
 ---
+
 ## Run and Test the ClaimStatus API Locally Without Docker
 
 ClaimStatus API is a simple ASP.NET Core Web API application that provides endpoints to get claim status and summarize claim notes using Azure OpenAI.
@@ -129,42 +131,45 @@ It provide a secure configuration using user-secrets for local development.
 
 \(\mathsf{\color{lime}Remark:}\): For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
 
-	 
 ---
+
 ## Run and Test the Solution from Docker on Local machine
 
 1. Open .env file from source folder and and update your configuration as is mentioned
+
 ```
+
 ```
+
 1. Open a terminal under solution folder run docker compose up command to build and run the microservices in Docker containers:
+
    ```powershell
    docker compose up --build
    ```
+
    This command builds the Docker images for both ProductService and OrderService and starts the containers.
    Your terminal should look like in immage below:
 
    ![ClaimAPI](Documentation/Images/BuildAndStartDockerOnLocal.jpg "App Run in Docker Console")
 
-
 2. Open a browser and navigate to the following URLs to access the Swagger UI for ClaimStatus API and test that both HTTPS and HTTP are accesible and running
-        
-	For HTTPS: [https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
-    
-	For HTTP: [http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
-	
-	Your should have the swagger endpoints for ClaimStatus API visibe in browser like in immages below:
-	
-	**HTTPS port 7238**
-	![LocalHTTPS](Documentation/Images/HttpsClaimStatusAPILocal.jpg "App Run in Docker Console")
 
-	**HTTP port 5261**
-	![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
+   For HTTPS: [https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
+
+   For HTTP: [http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
+
+   Your should have the swagger endpoints for ClaimStatus API visibe in browser like in immages below:
+
+   **HTTPS port 7238**
+   ![LocalHTTPS](Documentation/Images/HttpsClaimStatusAPILocal.jpg "App Run in Docker Console")
+
+   **HTTP port 5261**
+   ![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
 3. Test endpoints
-		
-	\(\mathsf{\color{lime}Remark 1:}\):  Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
+   \(\mathsf{\color{lime}Remark 1:}\): Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
-	\(\mathsf{\color{lime}Remark 2:}\): For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
+   \(\mathsf{\color{lime}Remark 2:}\): For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 
@@ -191,18 +196,19 @@ At this stage resources are checked and deployed if not exist.
 Resources are defined in the Bicep template and pileline uses them to deploy the resources in Azure.
 
 The resources deployed bicep files are:
+
 - Azure Container Registry (ACR),
 - Azure Log Analytics,
 - Azure Container Environment
-  
 
 Resources not included in pipeline:
-1. Azure OpenAI - already deployed to run on local
-1. Because of short timeline and issues in deployment: 
-- \*\*\* - Azure Container Apps (ACA),
-- \*\*\* - Azure API Management (APIM),
 
-- \*\*\* - Azure Application Insights.
+1. Azure OpenAI - already deployed to run on local
+1. Because of short timeline and issues in deployment:
+
+- Azure Container Apps (ACA),
+- Azure API Management (APIM),
+- Azure Application Insights.
 
 ### Stage2: **Build and Push Docker Images to ACR**:
 
@@ -231,7 +237,8 @@ Below are the detailed steps for the deployment process.
 
 Few prerequisites are needed before starting the deployment process:
 **Azure Portal**: Ensure you create create a resource group named `introspect-2-b` in West Europe region to host the resources.
-**Azure DevOps Setup**: - a new project - needed connections: - github connection - Azure Container Registry connection - Azure Resource Manager connection - a new pipeline 3. **GitHub Repository**: The source code for the microservices should be hosted in a GitHub repository.
+**Azure DevOps Setup**: Setup described in the next section
+**GitHub Repository**: The source code for the ClaimStatus should be hosted in a GitHub repository.
 
 ## 2. Azure DevOps Setup
 

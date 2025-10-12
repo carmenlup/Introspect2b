@@ -101,6 +101,29 @@ try {
     # exit 1
 }
 
+# -- Container App Respurce --
+
+$resourceGroup="introspect-2-b" `
+$location="westeurope" `
+$containerEnvironmentName="claimstatus-container-app-env2" `
+$logAnalyticsWorkspaceName="workspace-intospect2b-logs" `
+$containerEnvBicepFile="container-environment-def.bicep"  # Update this path
+
+Write-Host "Deploying Container Environment $containerEnvironmentName" 
+
+$workspaceId = workspaceId=$(az monitor log-analytics workspace show --resource-group $resourceGroup --workspace-name $logAnalyticsWorkspaceName --query customerId --output tsv)
+
+Write-Host "workspace id: $workspaceId"
+Write-Host "workspace id from internal var ?"
+
+az deployment group create `
+    --resource-group $resourceGroup `
+    --template-file $containerEnvBicepFile `
+    --parameters containerEnvironmentName=$containerEnvironmentName `
+                location=$location `
+                logAnalyticsWorkspaceName=$logAnalyticsWorkspaceName `
+                logAnalyticsWorkspaceId=$workspaceId
+
 
 
 # --- CLI commands for respources--
