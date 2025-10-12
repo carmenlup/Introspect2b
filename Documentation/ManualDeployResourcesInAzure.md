@@ -65,25 +65,25 @@ docker push introspect2bacr.azurecr.io/claimstatus:latest
 3. Conteiner App Name: `claim-status-app`
 4. Environment and Log Analytics Workspece are created via pipeline so will be already available
 
-![ContainerApp](Images/AcaEnvironmentBasicsConfig.jpg "ContainerACR Basic Config")
+   ![ACABasicConfig](Images/AcaEnvironmentBasicsConfig.jpg "ContainerACR Basic Config")
 
-1. 5. In the Container tab
+5. In the Container tab
     - Select the container registry `introspect1bacr.azurecr.io`
 	- Select image `claimstatus`
 	- Select tag `latest`
 	- Authentication type: `Secret`
 	- Delpoyment Stack : `.NET`
 
-	![contianer config](Images/CreateAcaContainerACR.jpg "ContainerACR Config")
+	![ACAContainerConfig](Images/ACAContainerConfig.jpg "ContainerACR Config")
 
 6. Go to Ingress tab
 	- Enable ingress
 	- Acccept trafic from anyware
 	- Target port: `8080`
 
-	![ingress config](Documentation/Images/CreateAcaIngress.jpg "Ingress Config")
+	![ACAIngressConfig](Images/ACAIngressConfig.jpg "Ingress Config")
 
-7. Press Review and create, Then Create
+7. Press Review and create, than Create
 
 8. Check the deployment status in the Azure Portal. 
 It may take a few minutes for the Container App to be created and the container to be deployed.

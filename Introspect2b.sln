@@ -44,7 +44,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
 	ProjectSection(SolutionItems) = preProject
 		Documentation\Images\ACABasicConfig.jpg = Documentation\Images\ACABasicConfig.jpg
+		Documentation\Images\ACAContainerConfig.jpg = Documentation\Images\ACAContainerConfig.jpg
 		Documentation\Images\AcaEnvironmentBasicsConfig.jpg = Documentation\Images\AcaEnvironmentBasicsConfig.jpg
+		Documentation\Images\ACAIngressConfig.jpg = Documentation\Images\ACAIngressConfig.jpg
 		Documentation\Images\BuildAndStartDockerOnLocal.jpg = Documentation\Images\BuildAndStartDockerOnLocal.jpg
 		Documentation\Images\HttpClaimStatusAPILocal.jpg = Documentation\Images\HttpClaimStatusAPILocal.jpg
 		Documentation\Images\HttpsClaimStatusAPILocal.jpg = Documentation\Images\HttpsClaimStatusAPILocal.jpg
