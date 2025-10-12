@@ -134,7 +134,7 @@ It provide a secure configuration using user-secrets for local development.
    This command builds the Docker images for both ProductService and OrderService and starts the containers.
    Your terminal should look like in immage below:
 
-   ![ClaimAPI](Images/BuildAndStartDockerOnLocal.jpg "App Run in Docker Console")
+   ![ClaimAPI](Documentation/Images/BuildAndStartDockerOnLocal.jpg "App Run in Docker Console")
 
 
 2. Open a browser and navigate to the following URLs to access the Swagger UI for each microservice to test both are working.
