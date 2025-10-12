@@ -72,7 +72,7 @@ stages:
               echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
           fi
 
-          # Check if COntainer App exists
+          # Check if Container App exists
           check if Container App exists
           containerAppNameExist=$(az containerapp show --name $(imageRepository) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
           if [ -n "containerAppNameExist" ]; then

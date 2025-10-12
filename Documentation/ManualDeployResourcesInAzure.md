@@ -2,12 +2,12 @@
 This document provides step-by-step instructions for manually deploying the related services In azure
 The used servicis for ClaimStatus are:
 
-- Azure Container Registry (ACR) 
-- Azure Container Apps (ACA)
-- Azure Log Analytics Workspace
-- Azure Cntainer Environment 
-- Api Management (APIM)
-
+1. Azure Container Registry (ACR) 
+2. Azure Container Apps (ACA)
+3. Azure Log Analytics Workspace
+4. Azure Container Environment 
+5. Api Management (APIM)
+---
 ## 1. Deployment to Azure Container Registry (ACR) 
 We will use Azure CLI for this objective.
 ##### 1.1 Login to azure
@@ -50,15 +50,17 @@ docker build -f ClaimStatus/Dockerfile -t claimstatus:latest .
 ```
 - Then, tag the Docker image
 ```
-docker tag claimstatus introspect2bacr.azurecr.io/claimservice:latest
+docker tag claimstatus introspect2bacr.azurecr.io/claimstatus:latest
+```
+- Login to ACR
+```
+az acr login --name introspect2bacr
 ```
 - Push Push the Docker image to ACR for ClaimStatus
 ```
 docker push introspect2bacr.azurecr.io/claimstatus:latest
 ```
-
-
-
+---
 # 2. Deploy ClaimStatus in ACA
 1. Go to azure portal and create a new Azure Container App.
 2. Select respurce group `introspect-2-b` 
@@ -101,8 +103,8 @@ https://claim-status-app.delightfulmoss-58bb48c4.westeurope.azurecontainerapps.i
 
 
 
-# Test communication between ProductService and OrderService using Dapr on Azure
-You can test the communication between ProductService and OrderService using Dapr by invoking the endpoints defined in the ProductService API.
+# Test ClaimStatus in Azure
+You can test how ClimStatus AI and OpenAI are working together in Azure by invoking the POST endpoint summarize.
 In Swagger UI, go to create endpoint and create a product.
 ### Example HTTP Requests for Create a Product
 ```http

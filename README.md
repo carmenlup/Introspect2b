@@ -184,7 +184,7 @@ This section provides details about the implemented CI/CD pipeline and infrastru
 The implementation contain the pipeline and infrastructure as code (IaC) templates to automate the deployment process.
 The pipeline is defined in the `pipelines/azure-pipelines.yml` file and uses Bicep templates located in the `iac/` folder.
 
-$\mathsf{\color{lime}Remark 1:}$: For an easier maintainace and better understanding, each resource is defined in a separated Bicep file and also deployment of each resource is in a separated job in the pipeline defibition.
+$\mathsf{\color{lime}Remark 1:}$: For an easier maintainace and better understanding, each resource is defined in a separated Bicep file and also deployment of each resource is in a separated job in the pipeline definition.
 
 $\mathsf{\color{lime}Remark 2:}$: In real project the pipeline dedicated for code buld and resources deployment are separatesd. In this demo project, for simplicity, they are in the same pipeline.
 
@@ -203,12 +203,11 @@ The resources deployed bicep files are:
 
 Resources not included in pipeline:
 
-1. Azure OpenAI - already deployed to run on local
-1. Because of short timeline and issues in deployment:
-
-- Azure Container Apps (ACA),
-- Azure API Management (APIM),
-- Azure Application Insights.
+1. Azure OpenAI - already manually deployed to run the solution on local (reffer README.md documentation)
+1. Because of short timeline of develop this POC:
+	- Azure Container Apps (ACA),
+	- Azure API Management (APIM),
+	- Azure Application Insights.
 
 ### Stage2: **Build and Push Docker Images to ACR**:
 
@@ -244,14 +243,14 @@ Few prerequisites are needed before starting the deployment process:
 
 In order to automate the deployment process, we will set up a CI/CD pipeline in Azure DevOps.
 
-##### 2.1 Create a new project in Azure DevOps
+### 2.1 Create a new project in Azure DevOps
 
-- Go to your Azure DevOps organization and click on "New Project".
-- Enter a name for your project (e.g., "introspect-2-b") and click "Create".
+- Go to your Azure DevOps organization and click on `New Project`.
+- Enter `introspect-2-b` name for your project  and click `Create`.
 
 Documentation link: [Create a project](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
 
-##### 2.2. Setup GitHub connection
+### 2.2. Setup GitHub connection
 
 - In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
 - Click on `New service connection` and select `GitHub`.
@@ -259,7 +258,7 @@ Documentation link: [Create a project](https://learn.microsoft.com/en-us/azure/d
 
 Documentation link: [Connect to GitHub](https://learn.microsoft.com/en-us/azure/devops/boards/github/connect-to-github?view=azure-devops)
 
-#### 2.3 Create Azure Resource Manager connection
+### 2.3 Create Azure Resource Manager connection
 
 This will ensure that Azure DevOps can deploy resources to your Azure subscription.
 
@@ -271,21 +270,19 @@ This will ensure that Azure DevOps can deploy resources to your Azure subscripti
 
 Documentation link [Service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
 
-####
-
-##### 2.3. Create secure connection to Azure Container Registry (ACR)
+#### 2.3. Create secure connection to Azure Container Registry (ACR)
 
 - In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
-- Click on `New service connection` and select "Docker Registry".
+- Click on `New service connection` and select `Docker Registry`.
 - Select `Azure Container Registry` as the registry type.
-- Select the subscription and the ACR instance `introspect2bacr` created on step 1.3.
+- Select the subscription and the ACR instance `introspect2bacr` created on step 2.3.
 - Use `acr-connection` for service connection name and save it.
 
-# Deployment to Azure Container Apps (ACA) using automation with bicep
+# 3. Deploy resource in Azure via automation
 
 This section provides instructions for deploying the ClaimStatus to Azure Container Apps (ACA) using azure pipelines.
 
-1. Create a new pipeline in Azure DevOps
+#### 3.1 Create a new pipeline in Azure DevOps
 
 - Go to your Azure DevOps project and navigate to the Pipelines section.
 - Click on `New Pipeline` and select `Azure Repos Git` as the source.
@@ -299,9 +296,19 @@ This section provides instructions for deploying the ClaimStatus to Azure Contai
   ![PipelineConfig](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Config")
 - press Run button to create and run the pipeline. Wait until pipleline is finish
 
-	![PipelineCreate](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Create and run")
+  ![PipelineCreate](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Create and run")
 
+#### 3.2 Check Deployed resources
+After pipeline runs you should have the next respurces created in cloud:
+- Azure Container Registry (ACR),
+- Azure Log Analytics,
+- Azure Container Environment
 
+#### 3.2 Manual Deploy
+As is mentioned in the section `Pipleline and IaC Overview` Azure Container Registy is not included in pipeline deployment.
+To deploy the ACR follow the documentation [Manual Deployment In Azure](Documentation/ManualDeployResourcesInAzure.md) and run the pipeline again to build the code and push to ACR.
+
+The documentation provide also the deployment of ACR and ensure the minimal infrastructure to have the ClamStatus API up and run.
 
 
 
