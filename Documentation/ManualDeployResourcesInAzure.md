@@ -65,7 +65,7 @@ docker push introspect2bacr.azurecr.io/claimstatus:latest
 3. Conteiner App Name: `claim-status-app`
 4. Environment and Log Analytics Workspece are created via pipeline so will be already available
 
-![ContainerApp](Documentation/Images/AcaEnvironmentBasicsConfig.jpg "ContainerACR Basic Config")
+![ContainerApp](Images/AcaEnvironmentBasicsConfig.jpg "ContainerACR Basic Config")
 
 1. 5. In the Container tab
     - Select the container registry `introspect1bacr.azurecr.io`
