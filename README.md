@@ -310,10 +310,47 @@ To deploy the ACR follow the documentation [Manual Deployment In Azure](Document
 
 The documentation provide also the deployment of ACR and ensure the minimal infrastructure to have the ClamStatus API up and run.
 
+---
+---
+# 4. Establish connectivity with docker after deployment
+After deployment in Azure conectivity between OpenAI and ACA must be configured in order to run the POST endpoint.
+### Secrets Configuration for OpenAi in Azure ACA
+- In ACA, go to `Security` -> `Secrets` and create the next secrets:
+	- Name: `openaiconfig-endpoint`, Value: `(your OpenAi endpoint)`
+	- Name: `openaiconfig-deploymentname`, Value: `(your OpenAi deployment name)`
+	- Name: `openaiconfig-apikey`, Value: `(your OpenAi API key)`
+- In `Containers` -> `Environment variables`:
+	- Name: `OpenAiConfig__Endpoint`, Source: `Reference a secret`, Value: `openaiconfig-endpoint`
+	- Name: `OpenAiConfig__DeploymentName`, Source: `Reference a secret`, Value: `openaiconfig-deploymentname`
+	- Name: `OpenAiConfig__ApiKey`, Source: `Reference a secret`, Value: `openaiconfig-apikey`
+- Save and restart your app.
+
+### Test the endpoints
+- Go to the `claim-status-app` resource in Azure Portal.
+- Open the API in a new tab
+	- Copy the URL from the Overview tab and replace `<calimstatusURL>`in the link below
+	```
+	<calimstatusURL>/swagger/index.html
+	```
+	Your link sould look like this:
+	```
+	https://claim-status-app.delightfulmoss-58bb48c4.westeurope.azurecontainerapps.io/swagger/index.html
+	```
+
+- In the preview tab select Log Stream tab on ACA to live stream and see the result. Initial log stream should look loke this:
+- Execute both `claim` and `sumarize` APIs `id = 1`. You should see the logs in Log Stream
+
+	ACA Logs for `/api/Claims/1`
+	![ACALogsClaimStatus](Documentation/Images/ACAClaimAPiLog.jpg "Logs for Claim api call")
+
+	ACA Logs for `/api/Claims/1/summarize`
+	![AcaLogSumarize](Documentation/Images/ACANotesAPiLog.jpg "Logs for Sumarize api call")
 
 
 
 
+
+```
 ##### 1. Deploy ProductService in ACA
 1. Go to azure portal and create a new Azure Container App.
 2. Select respurce group `introspect-1-b`
