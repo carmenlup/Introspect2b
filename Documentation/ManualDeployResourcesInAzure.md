@@ -20,24 +20,42 @@ az group create --name introspect-2-b --location westeurope
 ```
 ##### 1.3. Create the ACR registry
 - Check if your subscription is registered to use `Microsoft.ContainerRegistry` provider
-```
-az provider show --namespace Microsoft.ContainerRegistry --query "registrationState"
-```
+	```
+	az provider show --namespace Microsoft.ContainerRegistry --query "registrationState"
+	```
 - If the registrationState is `NotRegistered`, run the following command to register the provider:
-```
-az provider register --namespace Microsoft.ContainerRegistry
-```
+	```
+	az provider register --namespace Microsoft.ContainerRegistry
+	```
 - Wait registration to finish. You can check the result by running the command in step 1 again.
 - Create the ACR registry
-```
-az acr create --resource-group introspect-2-b --name introspect2bacr --sku Basic
-```
+	```
+	az acr create --resource-group introspect-2-b --name introspect2bacr --sku Basic
+	```
 - Enable the admin user account for the registry
-```
-az acr update -n introspect2bacr --admin-enabled true
-```
+	```
+	az acr update -n introspect2bacr --admin-enabled true
+	```
+##### 1.4. Push an image to ACR
+`a. Tag the Docker image for ClaimStatus`
 
-## 2. 
+- You need to ensure your local Docker immage exists before tagging it.
+
+	If you have not built the Docker image yet, you can do so by running the following command solution folder (Introspect2b) and build image from there
+
+	$\mathsf{\color{orange}Reason Explained:}$: We have external folders from project folders. I order to push to docker the external app context folder we need to buid the app from Introspect2b folder which is the solution folder
+
+```
+docker build -f ClaimStatus/Dockerfile -t claimstatus:latest .
+```
+- Then, tag the Docker image
+```
+docker tag claimstatus introspect2bacr.azurecr.io/claimservice:latest
+```
+- Push Push the Docker image to ACR for ClaimStatus
+```
+docker push introspect2bacr.azurecr.io/claimstatus:latest
+```
 
 
 

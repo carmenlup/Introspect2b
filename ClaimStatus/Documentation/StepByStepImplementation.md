@@ -141,19 +141,23 @@ builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 
 Open the `ClaimsController.cs` file and implement the GetClaimById and SummarizeClaims endpoints as follow:
 
-#### GetClaimById:
+---
+### GetClaimById details
 
-This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found;
+This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found
 
-##### Response Types
+`Endpoint URL:` `GET /api/claims/{id}`
 
-1. 200 OK - If the claim is found, it returns a 200 OK response with the claim details.
-   Request: `GET /api/claims/{id}`
-   Parameters:
-   Name: id - The unique identifier of the claim to retrieve.
-   Tyepe: integer
-   Mandatory: Yes
-   Response:
+**`Parameters:`**
+- **Name:** `id` - The unique identifier of the claim to retrieve.
+- **Tyepe:** `integer`
+- **Mandatory:** `Yes`
+
+### Response Types
+
+`200 OK` - If the claim is found, it returns a 200 OK response with the claim details.
+
+
 
 ```json
 {
@@ -166,49 +170,39 @@ This endpoint retrieves a claim by its unique identifier. It reads from the `moc
 }
 ```
 
-2. 400 Bad Request - If there is an error reading the claims file, it returns a 400 Bad Request response.
+`400 Bad Request` - If there is an error reading the claims file, it returns a 400 Bad Request response.
 
 ```json
 Invalid Id claim data provided.
 ```
-
-3. 404 Not Found - If the claim is not found, it returns a 404 Not Found response.
+`404 Not Found` - If the claim is not found, it returns a 404 Not Found response.
 
 ```
 Claim with ID 15 not found.
 ```
 
-4. 404 Not Found - If the mock data is missing
+`404 Not Found` - If the mock data is missing
 
 ```
 Claims data set not found. Check if claim.json exist
 ```
-
-#### SummarizeClaims:
+---
+### SummarizeClaims details
 
 This endpoint provides a summary of all claim notes. It reads notes from the `mocks/notes.json` file and summarizes them using OpenAI's gpt-4o-mini model.
 Implementation use the Open ai so package `Azure.AI.OpenAI` that you need to add to the project using NuGet Package Manager or .NET CLI.
 
-##### Response Types
+`Endpoint URL:` `POST /api/claims/1/summarize`
+    
+**`Parameters:`**
+- **Name:** `Id` - The unique identifier of the claim to retrieve the recomandations based on all notes for Claim Id.
+- **Type:** `Integer`
+- **Mandatory:** `Yes`
 
-1.  200 OK - If the summary is successfully generated, it returns a 200 OK response with the summary text.
-    Request: `POST /api/claims/1/summarize`
-    Parameters:
-    Name: id - The unique identifier of the claim to retrieve.
-    Tyepe: integer
-    Mandatory: Yes
-    Body request:
-    Payload:
-    ```
+### Response Types
 
-        ```
-
-    Response type:
-
-1.  200 Ok - if Notes exist for a particular ClamId
-
-```
-
+`200 OK`- If the summary is successfully generated, it returns a 200 OK response with the summary text.
+```json
 {
   "claimId": 1,
   "originalNotes": "**Original Notes:**  \n1. The claimant provided all necessary documents. The claim is under review.  \n2. Additional information requested from the claimant regarding the incident details.",
@@ -217,9 +211,8 @@ Implementation use the Open ai so package `Azure.AI.OpenAI` that you need to add
 }
 ```
 
-2. 200 OK - when Notes for a particular ClaimId does not exist
-
-```
+`200 OK` - when Notes for a particular ClaimId does not exist in notes.json mock the response from OpenAI generates proper response
+```json
 {
   "claimId": 3,
   "originalNotes": "Original Notes: []",
@@ -228,15 +221,14 @@ Implementation use the Open ai so package `Azure.AI.OpenAI` that you need to add
 }
 ```
 
-3. 404 Not Found - If the mock data is missing
-
-```
-Notes data not found for Claim Id 1. Check if notes.exist to path: C:\Introspect2b\mocks\notes.json
+`404 Not Found` - If the mock data is missing
+```json
+Notes data not found for Claim Id 1. Check if notes.exist to path: \mocks\notes.json
 ```
 
 ### 6. Add Swagger for API documentation and testing.
 
-In the `OrderService` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
+In the `ClaimStatus` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
 
 - If using Visual Studio, right-click on the project, select "Manage NuGet Packages", and search for `Swashbuckle.AspNetCore`.
 - If using .NET CLI, run:
@@ -283,7 +275,7 @@ app.Run();
   ![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-## Containerization and run Claims
+## Containerization and run Claims Implementation Details
 
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.
 Open a terminal and use th following steps will guide you through the containerization process:
@@ -318,7 +310,7 @@ docker run -it --rm -p 8030:8030 -p 8031:8031 `
   claimstatus:latest
 ```
 
-### Accessing the Order Service
+### Accessing the ClaimStatus from Docker
 
 You can access the Order Service API at the following URL:
 

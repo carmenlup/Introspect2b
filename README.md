@@ -66,14 +66,14 @@ Introspect2b					# Solution folder
 └── README.md			# Documentation for the solution
 ```
 
-- TBRemovedLATER - ClaimStatus/ — service source + Dockerfile.
-- TBRemovedLATER - mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
-- TBRemovedLATER apim/ — APIM policy files or export.
-- iac/ — Bicep/Terraform templates.
-- TBRemovedLATER- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
-- scans/ — link/screenshots to Defender findings
-- observability/ — saved KQL queries and sample screenshots.
-  IP - README.md — instructions, GenAI prompts used, how to run/tests.
+- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - ClaimStatus/ — service source + Dockerfile.
+- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
+- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> apim/ — APIM policy files or export.
+- <span style="color:orange"><b>TBRemovedLATER - IP 🖊️ </b></span> iac/ — Bicep/Terraform templates.
+- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
+- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> scans/ — link/screenshots to Defender findings
+- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> observability/ — saved KQL queries and sample screenshots.
+- <span style="color:orange"><b>TBRemovedLATER - IP 🖊️ </b></span> - README.md — instructions, GenAI prompts used, how to run/tests.
 
 ---
 
@@ -102,7 +102,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
    
 	❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
-
+---
 ## Run and Test the ClaimStatus API Locally Without Docker
 
 ClaimStatus API is a simple ASP.NET Core Web API application that provides endpoints to get claim status and summarize claim notes using Azure OpenAI.
@@ -127,6 +127,10 @@ It provide a secure configuration using user-secrets for local development.
    - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
    - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
+\(\mathsf{\color{lime}Remark:}\): For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
+
+	 
+---
 ## Run and Test the Solution from Docker on Local machine
 
 1. Open .env file from source folder and and update your configuration as is mentioned
@@ -157,9 +161,10 @@ It provide a secure configuration using user-secrets for local development.
 	![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
 3. Test endpoints
-
+		
 	\(\mathsf{\color{lime}Remark 1:}\):  Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
-For more details about ClaimStatus
+
+	\(\mathsf{\color{lime}Remark 2:}\): For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 
@@ -186,14 +191,18 @@ At this stage resources are checked and deployed if not exist.
 Resources are defined in the Bicep template and pileline uses them to deploy the resources in Azure.
 
 The resources deployed bicep files are:
-
 - Azure Container Registry (ACR),
-- \*\*\* - Azure Container Apps (ACA),
-- \*\*\* - Azure API Management (APIM),
-- \*\*\* - Azure OpenAI,
 - Azure Log Analytics,
 - Azure Container Environment
-  \*\*\* - Azure Application Insights.
+  
+
+Resources not included in pipeline:
+1. Azure OpenAI - already deployed to run on local
+1. Because of short timeline and issues in deployment: 
+- \*\*\* - Azure Container Apps (ACA),
+- \*\*\* - Azure API Management (APIM),
+
+- \*\*\* - Azure Application Insights.
 
 ### Stage2: **Build and Push Docker Images to ACR**:
 
