@@ -141,3 +141,8 @@ az deployment group create `
             logAnalyticsSku="PerGB2018" `
             cpu="0.5" `
             memory="1.0Gi"
+
+            az monitor log-analytics workspace get-shared-keys `
+             --resource-group "introspect-2-b" `
+             --workspace-name "workspace-intospect2b-logs" `
+             --query primarySharedKey -o tsv 

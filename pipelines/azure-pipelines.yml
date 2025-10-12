@@ -171,15 +171,15 @@ stages:
              --workspace-name $(logAnalyticsWorkspaceName) \
              --query customerId \
              --output tsv 2>/dev/null || echo "")
-          echo "workspace id: $(workspaceId)"
+          echo "workspace id: $workspaceId"
           echo "workspace id from internal var ?"
           az deployment group create \
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) \
                 location=$(location) \
-                logAnalyticsWorkspaceId=$(workspaceKey) \
-                logAnalyticsWorkspaceKey=$(workspaceId) 
+                logAnalyticsWorkspaceId=$workspaceKey \
+                logAnalyticsWorkspaceKey=$workspaceId 
   
 - stage: Build
   displayName: 'Build and Push Image'

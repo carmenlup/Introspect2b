@@ -59,25 +59,22 @@ docker push introspect2bacr.azurecr.io/claimstatus:latest
 
 
 
-##### 1. Deploy ProductService in ACA
+# 2. Deploy ClaimStatus in ACA
 1. Go to azure portal and create a new Azure Container App.
-2. Select respurce group `introspect-1-b` 
-3. Conteiner App Name: `claimstatus-app`
-4. Click on Create new environment
-	- Set the environment name to `my-container-app-env` and select the resource group `introspect-2-b`.
-	- Go to Monitoring tab and click Create New Log Analytics Workspace
-		- Set the name to `workspace-intospect2b-logs`
-		
-  		![analytics workspace](Documentation/Images/CreateACABasics.jpg "Analytics Workspace")
+2. Select respurce group `introspect-2-b` 
+3. Conteiner App Name: `claim-status-app`
+4. Environment and Log Analytics Workspece are created via pipeline so will be already available
 
-5. In the Container tab
+![ContainerApp](Documentation/Images/AcaEnvironmentBasicsConfig.jpg "ContainerACR Basic Config")
+
+1. 5. In the Container tab
     - Select the container registry `introspect1bacr.azurecr.io`
 	- Select image `claimstatus`
 	- Select tag `latest`
 	- Authentication type: `Secret`
 	- Delpoyment Stack : `.NET`
 
-	![contianer config](Documentation/Images/CreateAcaContainerACR.jpg "ContainerACR Config")
+	![contianer config](Images/CreateAcaContainerACR.jpg "ContainerACR Config")
 
 6. Go to Ingress tab
 	- Enable ingress
