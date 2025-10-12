@@ -25,7 +25,7 @@ stages:
   variables:
       containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
       logAnalyticsWorkspaceName: 'workspace-intospect2b-logs'  # Name of your Log Analytics workspace
-      containerEnvironmentName: 'claimstatus-container-app-env'  # Name of your Container Environment
+      containerEnvironmentName: 'claimstatus-container-app-env2'  # Name of your Container Environment
       acrExists: false
       logAnalyticsExists: false
       containerEnvExists: false
@@ -114,10 +114,12 @@ stages:
         scriptLocation: 'inlineScript'
         inlineScript: |
           echo "Deploying Azure Container Registry $(containerRegistryName)..."
-          az deployment group create \
-            --resource-group $(resourceGroup) \
-            --template-file $(acrBicepFile) \
-            --parameters containerRegistryName=$(containerRegistryName) location=$(location)
+          
+          az deployment group create `
+            --resource-group $(resourceGroup) `
+            --template-file $(acrBicepFile) `
+            --parameters containerRegistryName=$(containerRegistryName) `
+              location=$(location)
   
   - job: DeployLogAnalytics
     displayName: 'Deploy Log Analytics if not exists'
@@ -147,7 +149,7 @@ stages:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
       containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
     dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
-    condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
+    #condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureCLI@2
       displayName: 'Deploy Container Environment'
@@ -158,11 +160,23 @@ stages:
         inlineScript: |
           echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
           echo "Deploying Container Environment $(containerEnvironmentName)..."
+          $workspaceKey = az monitor log-analytics workspace get-shared-keys \
+             --resource-group $(resourceGroup) \
+             --workspace-name $(logAnalyticsWorkspaceName) \
+             --query primarySharedKey \
+             --output tsv
+          $workspaceId = az monitor log-analytics workspace show \
+             --resource-group $(resourceGroup) \
+             --workspace-name $(logAnalyticsWorkspaceName) \
+             --query customerId \
+             --output tsv
           az deployment group create \
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
-            --parameters containerEnvironmentName=$(containerEnvironmentName) location=$(location) logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName)
-            #--verbose
+            --parameters containerEnvironmentName=$(containerEnvironmentName) \
+                location=$(location) \
+                logAnalyticsWorkspaceId=$(workspaceKey) \
+                logAnalyticsWorkspaceKey=$(workspaceId)
   
 - stage: Build
   displayName: 'Build and Push Image'
