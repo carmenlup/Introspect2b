@@ -142,12 +142,23 @@ It provide a secure configuration using user-secrets for local development.
    ![ClaimAPI](Documentation/Images/BuildAndStartDockerOnLocal.jpg "App Run in Docker Console")
 
 
-2. Open a browser and navigate to the following URLs to access the Swagger UI for each microservice to test both are working.
-   - ClaimStatus:
-     [https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
-     [http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
+2. Open a browser and navigate to the following URLs to access the Swagger UI for ClaimStatus API and test that both HTTPS and HTTP are accesible and running
+        
+	For HTTPS: [https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
+    
+	For HTTP: [http://localhost:5261/swagger/index.html](http://localhost:5261/swagger/index.html)
+	
+	Your should have the swagger endpoints for ClaimStatus API visibe in browser like in immages below:
+	
+	**HTTPS port 7238**
+	![LocalHTTPS](Documentation/Images/HttpsClaimStatusAPILocal.jpg "App Run in Docker Console")
 
-Remark: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
+	**HTTP port 5261**
+	![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
+
+3. Test endpoints
+
+	\(\mathsf{\color{lime}Remark 1:}\):  Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 For more details about ClaimStatus
 
 ---
