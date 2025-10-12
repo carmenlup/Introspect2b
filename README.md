@@ -287,17 +287,22 @@ This section provides instructions for deploying the ClaimStatus to Azure Contai
 
 1. Create a new pipeline in Azure DevOps
 
-   - Go to your Azure DevOps project and navigate to the Pipelines section.
-   - Click on `New Pipeline` and select `Azure Repos Git` as the source.
-   -  Repository is in Github so select GitHub and authenticate if needed.
-   - Select your repository containing the microservices code.
-   - Choose `Select an existing YAML file` and select the path to the pipeline in the repo which is `/pipelines/azure-pipelines.yml` like in immage below:
-   [PipelineCrerate](Images/CreateAndRunPipeline.jpg)
-   - press Continue button
-   - press Run button to create and run the pipeline
+- Go to your Azure DevOps project and navigate to the Pipelines section.
+- Click on `New Pipeline` and select `Azure Repos Git` as the source.
+-  Repository is in Github so select GitHub and authenticate if needed.
+- Select your repository containing the microservices code.
+- Choose `Select an existing YAML file` and select the path to the pipeline in the repo which is `/pipelines/azure-pipelines.yml` like in immage below:
+
+- press Continue button
+  Now you sould be able to see the azure-pypeline.yaml definition
+
+  ![PipelineConfig](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Config")
+- press Run button to create and run the pipeline. Wait until pipleline is finish
+
+	![PipelineCreate](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Create and run")
 
 
-Now you sould be able to see the azure-pypeline.yaml definition
+
 
 
 
@@ -311,7 +316,7 @@ Now you sould be able to see the azure-pypeline.yaml definition
 	- Go to Monitoring tab and click Create New Log Analytics Workspace
 		- Set the name to `workspace-intospect2b-logs`
 
-  		![analytics workspace](Documentation/Images/CreateACABasics.jpg "Analytics Workspace")
+  		![analytics workspace](Documentation/Images/ACABasicConfig.jpg "Analytics Workspace")
 
 5. In the Container tab
     - Select the container registry `introspect1bacr.azurecr.io`
@@ -320,14 +325,14 @@ Now you sould be able to see the azure-pypeline.yaml definition
 	- Authentication type: `Secret`
 	- Delpoyment Stack : `.NET`
 
-	![contianer config](Documentation/Images/CreateAcaContainerACR.jpg "ContainerACR Config")
+	![contianer config](Documentation/Images/ACAContainerConfig.jpg "ContainerACR Config")
 
 6. Go to Ingress tab
 	- Enable ingress
 	- Acccept trafic from anyware
 	- Target port: `8080`
 
-	![ingress config](Documentation/Images/CreateAcaIngress.jpg "Ingress Config")
+	![ingress config](Documentation/Images/ACAIngressConfig.jpg "Ingress Config")
 
 7. Press Review and create, Then Create
 
@@ -349,7 +354,7 @@ https://productservice-app.jollypond-a6f1a425.westeurope.azurecontainerapps.io/s
 ````
 -
 
-
+```
 
 # Test communication between ProductService and OrderService using Dapr on Azure
 You can test the communication between ProductService and OrderService using Dapr by invoking the endpoints defined in the ProductService API.
