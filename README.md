@@ -101,9 +101,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
    
-	<span style="color:red">❗️ <b>Important:</b></span> Make sure to note down the endpoint URL and API key for later use.
-	
-	- Make sure to note down the endpoint URL and API key for later use.
+	❗️ $\mathsf{\color{red}Important:}$ Make sure to note down the endpoint URL and API key for later use.
 
 ## Run and Test the ClaimStatus API Locally Without Docker
 
@@ -165,8 +163,9 @@ This section provides details about the implemented CI/CD pipeline and infrastru
 The implementation contain the pipeline and infrastructure as code (IaC) templates to automate the deployment process.
 The pipeline is defined in the `pipelines/azure-pipelines.yml` file and uses Bicep templates located in the `iac/` folder.
 
-**Remark 1**: For an easier maintainace and better understanding, each resource is defined in a separated Bicep file and also deployment of each resource is in a separated job in the pipeline defibition.
-**Remark 2**: In real project the pipeline dedicated for code buld and resources deployment are separatesd. In this demo project, for simplicity, they are in the same pipeline.
+$\mathsf{\color{lime}Remark 1:}$: For an easier maintainace and better understanding, each resource is defined in a separated Bicep file and also deployment of each resource is in a separated job in the pipeline defibition.
+
+$\mathsf{\color{lime}Remark 2:}$: In real project the pipeline dedicated for code buld and resources deployment are separatesd. In this demo project, for simplicity, they are in the same pipeline.
 
 ## Pipeline stages
 
