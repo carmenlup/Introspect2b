@@ -160,17 +160,8 @@ stages:
         inlineScript: |
           echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
           echo "Deploying Container Environment $(containerEnvironmentName)..."
-          
-          workspaceKey=$(az monitor log-analytics workspace get-shared-keys -resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query primarySharedKey --output tsv 2>/dev/null || echo "")
-
-          echo "resourceGroup: $(resourceGroup)"
-          echo "logAnalyticsWorkspaceName: $(logAnalyticsWorkspaceName)"
-          echo "Testing az CLI output directly:"
-          az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName)
-          echo "Exit code: $?"
           workspaceId=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query customerId --output tsv)
-          echo "workspace id: $workspaceId"
-
+          
           echo "workspace id: $workspaceId"
           echo "workspace id from internal var ?"
           az deployment group create \
@@ -178,8 +169,8 @@ stages:
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) \
                 location=$(location) \
-                logAnalyticsWorkspaceId=$workspaceKey \
-                logAnalyticsWorkspaceKey=$workspaceId 
+                logAnalyticsWorkspaceName=$$(logAnalyticsWorkspaceName) \
+                logAnalyticsWorkspaceId=workspaceId 
   
 - stage: Build
   displayName: 'Build and Push Image'
