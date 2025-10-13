@@ -33,7 +33,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{B03AD8A5-17A1-4E96-A1BA-895937254ECD}"
 	ProjectSection(SolutionItems) = preProject
 		pipelines\azure-pipelines.yml = pipelines\azure-pipelines.yml
-		claim-status-app.yaml = claim-status-app.yaml
+		pipelines\claim-status-app.yaml = pipelines\claim-status-app.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{84AA35A6-5CF3-43F6-B2A9-68AC3B84E9F8}"
