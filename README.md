@@ -7,22 +7,17 @@ CI/CD with image scanning and enable observability.
 
 # Architecture Overview
 
-The solution implements a modern cloud-native architecture with the following components:
-How it works:
+This architecture implements the deployment of a Claim Status API within Azure Container Apps (ACA), 
+with external access managed via Azure API Management (APIM). The API surface comprises two primary endpoints: 
+- GET /claims/{id} for claim status retrieval 
+- POST /claims/{id}/summarize for generating claim note summaries leveraging Azure OpenAI.
 
-1. Code is developed and pushed to a GitHub repository.
-1. An Azure DevOps pipeline is triggered on code push wich perform the next:
-   - deploy Resources in Azure using bicep files
-   - builds the application, runs tests, scans for vulnerabilities, and pushes the Docker image to Azure Container Registry (ACR).
-1. The pipeline then deploys the application to Azure Container Apps (ACA) using Bicep templates.
-1.
+End-to-end automation is achieved through Azure DevOps CI/CD pipelines, orchestrating build, test, and deployment workflows. 
 
-- Azure Container Apps: Serverless container hosting platform
-- Azure Container Registry: Secure container image storage
-- Azure API Management: API gateway with policies and rate limiting
-- Azure OpenAI: gpt-4o-mini for claim summarization
-- Azure Log Analytics: Centralized logging and monitoring
-- Azure Application Insights: Application performance monitoring
+Security posture is strengthened by integrating container image scanning into the pipeline, while comprehensive observability is provided through Azure Monitor and Application Insights.
+
+![Architecture Diagram](Documentation/Images/ArchitectureOverview.jpg "Architecture Diagram")
+
 
 # Introspect1B Solution overview
 
@@ -69,10 +64,10 @@ Introspect2b					# Solution folder
 - <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - ClaimStatus/ — service source + Dockerfile.
 - <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
 - <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> apim/ — APIM policy files or export.
-- <span style="color:orange"><b>TBRemovedLATER - IP 🖊️ </b></span> iac/ — Bicep/Terraform templates.
+- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>  iac/ — Bicep/Terraform templates.
 - <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
 - <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> scans/ — link/screenshots to Defender findings
-- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> observability/ — saved KQL queries and sample screenshots.
+- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>  observability/ — saved KQL queries and sample screenshots.
 - <span style="color:orange"><b>TBRemovedLATER - IP 🖊️ </b></span> - README.md — instructions, GenAI prompts used, how to run/tests.
 
 ---
@@ -296,7 +291,7 @@ This section provides instructions for deploying the ClaimStatus to Azure Contai
   ![PipelineConfig](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Config")
 - press Run button to create and run the pipeline. Wait until pipleline is finish
 
-  ![PipelineCreate](Documentation/Images/CreateAndRunPipeline.jpg "Pipeline Create and run")
+  ![PipelineCreate](Documentation/Images/PippelineRun.jpg "Pipeline Create and run")
 
 #### 3.2 Check Deployed resources
 After pipeline runs you should have the next respurces created in cloud:
@@ -348,17 +343,12 @@ After deployment in Azure conectivity between OpenAI and ACA must be configured 
 
 ---
 ---
-# 5. AppInsights configuration for ACA Monitoring and Observability
-
-
-
-
-## 5 Monitoring ACA with Log Analytics and Application Insights
+# 5 Monitoring ACA with Log Analytics and Application Insights
 ACA has already Log Analytics workspace configured and connected to ACA.
 To have more insights and monitoring capabilities Application Insights must be configured and connected to ACA.
 Log Analytics will be used for infrastructure monitoring and Application Insights for application monitoring.
 
-#### 5.1 Create Application Insights resource
+### 5.1 Create Application Insights resource
 - In Azure Portal create a new Application Insights resource in the same resource group `introspect-2-b` and West Europe region.
 - Set the name to `appins-claimstatus-resource`
 - Choose the Log Analytics workspace created by pipeline `workspace-intospect2b-logs` in the same resource group.
@@ -366,7 +356,7 @@ Log Analytics will be used for infrastructure monitoring and Application Insight
 - Execute few calls to the API to generate some logs.
 - Check the [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md) for more details about Application Insights configuration and usage.
 
-- #### 5.2 Use KUSTO query Analytics to query logs from ACA and Application Insights
+### 5.2 Use KUSTO query Analytics to query logs from ACA and Application Insights
 Monitoring and observability is a key aspect of any application deployment. 
 All Log Services provide powerful querying capabilities to analyze and visualize logs namely Kusto Query Language (KQL).
 Kusto provides a rich set of operators and functions to filter, aggregate, and transform log data.
@@ -374,14 +364,14 @@ Also provides predefined queries and dashboards to help you get started quickly.
 Also you can create custom queries.
 Can be lounched from both ACA and Application Insights resources from `Monitoring` -> `Logs`
 
-##### Example of predifinedKQL query to see the logs from both ACA and Application Insights:
+#### Example of predifined KQL query to see the logs from both ACA and Application Insights:
 - In ACA go to `Settings` -> `Monitoring` -> Logs
 - filter for `Operations performance`
 - Run the query to see the logs from ACA:
 You will see the logs like in immage below:
 ![ACALogs](Documentation/Images/QustoQueryACA.jpg "ACA Logs Query")
 
-##### Example of custom KQL query to see the logs from Application Insights:
+#### Example of custom KQL query to see the logs from Application Insights:
 
 In observability folder you can find the next custom KQL queries in `queries.kql` file:
 1. `Get all traces and requests from the last 1 hour ordered by time desc`
@@ -391,6 +381,7 @@ In observability folder you can find the next custom KQL queries in `queries.kql
 
 Execute them in ACA Monitoring Logs or in Application Insights Logs to see the result
 
+---
 ---
 
 # 5. Setup APIM and connect to ACA
