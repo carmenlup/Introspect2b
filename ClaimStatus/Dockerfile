@@ -20,7 +20,7 @@ COPY iac/. ./iac
 RUN dotnet publish -c Release /p:PublishDir="/app/publish"
 
 # Use the official ASP.NET runtime image for the final container
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-chiseled AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0-distroless AS runtime
 WORKDIR /app
 COPY --from=build /app/publish ./publish
 
