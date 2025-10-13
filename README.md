@@ -132,11 +132,7 @@ It provide a secure configuration using user-secrets for local development.
 
 1. Open .env file from source folder and and update your configuration as is mentioned
 
-```
-
-```
-
-1. Open a terminal under solution folder run docker compose up command to build and run the microservices in Docker containers:
+2. Open a terminal under solution folder run docker compose up command to build and run the microservices in Docker containers:
 
    ```powershell
    docker compose up --build
@@ -147,7 +143,7 @@ It provide a secure configuration using user-secrets for local development.
 
    ![ClaimAPI](Documentation/Images/BuildAndStartDockerOnLocal.jpg "App Run in Docker Console")
 
-2. Open a browser and navigate to the following URLs to access the Swagger UI for ClaimStatus API and test that both HTTPS and HTTP are accesible and running
+3. Open a browser and navigate to the following URLs to access the Swagger UI for ClaimStatus API and test that both HTTPS and HTTP are accesible and running
 
    For HTTPS: [https://localhost:7238/swagger/index.html](https://localhost:7238/swagger/index.html)
 
@@ -161,7 +157,7 @@ It provide a secure configuration using user-secrets for local development.
    **HTTP port 5261**
    ![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
-3. Test endpoints
+4. Test endpoints
    \(\mathsf{\color{lime}Remark 1:}\): Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
    \(\mathsf{\color{lime}Remark 2:}\): For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
@@ -265,7 +261,7 @@ This will ensure that Azure DevOps can deploy resources to your Azure subscripti
 
 Documentation link [Service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
 
-#### 2.3. Create secure connection to Azure Container Registry (ACR)
+### 2.4. Create secure connection to Azure Container Registry (ACR)
 
 - In your Azure DevOps project, navigate to `Project Settings` -> `Service connections`.
 - Click on `New service connection` and select `Docker Registry`.
@@ -277,7 +273,7 @@ Documentation link [Service connections](https://learn.microsoft.com/en-us/azure
 
 This section provides instructions for deploying the ClaimStatus to Azure Container Apps (ACA) using azure pipelines.
 
-#### 3.1 Create a new pipeline in Azure DevOps
+### 3.1 Create a new pipeline in Azure DevOps
 
 - Go to your Azure DevOps project and navigate to the Pipelines section.
 - Click on `New Pipeline` and select `Azure Repos Git` as the source.
@@ -293,13 +289,13 @@ This section provides instructions for deploying the ClaimStatus to Azure Contai
 
   ![PipelineCreate](Documentation/Images/PippelineRun.jpg "Pipeline Create and run")
 
-#### 3.2 Check Deployed resources
+### 3.2 Check Deployed resources
 After pipeline runs you should have the next respurces created in cloud:
 - Azure Container Registry (ACR),
 - Azure Log Analytics,
 - Azure Container Environment
 
-#### 3.2 Manual Deploy
+### 3.2 Manual Deploy
 As is mentioned in the section `Pipleline and IaC Overview` Azure Container Registy is not included in pipeline deployment.
 To deploy the ACR follow the documentation [Manual Deployment In Azure](Documentation/ManualDeployResourcesInAzure.md) and run the pipeline again to build the code and push to ACR.
 
@@ -360,8 +356,11 @@ Log Analytics will be used for infrastructure monitoring and Application Insight
 Monitoring and observability is a key aspect of any application deployment. 
 All Log Services provide powerful querying capabilities to analyze and visualize logs namely Kusto Query Language (KQL).
 Kusto provides a rich set of operators and functions to filter, aggregate, and transform log data.
+
 Also provides predefined queries and dashboards to help you get started quickly.
+
 Also you can create custom queries.
+
 Can be lounched from both ACA and Application Insights resources from `Monitoring` -> `Logs`
 
 #### Example of predifined KQL query to see the logs from both ACA and Application Insights:
