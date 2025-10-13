@@ -1,6 +1,7 @@
 trigger: none
   # branches:
   #   include:
+  #     - main
   #     - master
 
 variables:
