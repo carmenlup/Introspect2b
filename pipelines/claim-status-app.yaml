@@ -51,7 +51,7 @@ stages:
           - task: AzureCLI@2
             displayName: "Azure Login"
             inputs:
-              azureSubscription: "claim-status-app-spn" # Service connection name for Azure subscription
+              azureSubscription: 'azure-subscription' # Service connection name for Azure subscription
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |
