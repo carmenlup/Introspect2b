@@ -1,0 +1,73 @@
+trigger:
+  branches:
+    include:
+      - master
+
+variables:
+  CONTAINER_APP_CONTAINER_NAME: 'claim-status-app'
+  CONTAINER_APP_NAME: 'claim-status-app'
+  CONTAINER_APP_RESOURCE_GROUP_NAME: 'introspect-2-b'
+  CONTAINER_REGISTRY_LOGIN_SERVER: 'introspect2bacr.azurecr.io'
+  DOCKER_FILE_PATH: 'ClaimStatus/Dockerfile'
+  PROJECT_NAME_FOR_DOCKER: 'claimstatus'
+
+stages:
+- stage: Build
+  displayName: Build and Push Image
+  jobs:
+  - job: Build
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - checkout: self
+
+    - task: DockerInstaller@0
+      displayName: 'Install Docker'
+
+    - task: Docker@2
+      displayName: 'Login to ACR'
+      inputs:
+        command: login
+        containerRegistry: 'introspect2bacr' # Service connection name in Azure DevOps
+
+    - task: Docker@2
+      displayName: 'Build and Push Image'
+      inputs:
+        command: buildAndPush
+        repository: '$(CONTAINER_REGISTRY_LOGIN_SERVER)/$(PROJECT_NAME_FOR_DOCKER)'
+        dockerfile: '$(DOCKER_FILE_PATH)'
+        tags: |
+          $(Build.BuildId)
+
+- stage: Deploy
+  displayName: Deploy to ACA
+  dependsOn: Build
+  jobs:
+  - job: Deploy
+    pool:
+      vmImage: 'ubuntu-latest'
+    steps:
+    - task: AzureCLI@2
+      displayName: 'Azure Login'
+      inputs:
+        azureSubscription: 'claim-status-app-spn' # Service connection name in Azure DevOps
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az config set extension.use_dynamic_install=yes_without_prompt
+
+          az containerapp registry set \
+            --name $(CONTAINER_APP_NAME) \
+            --resource-group $(CONTAINER_APP_RESOURCE_GROUP_NAME) \
+            --server $(CONTAINER_REGISTRY_LOGIN_SERVER) \
+            --username $(ACR_USERNAME) \
+            --password $(ACR_PASSWORD)
+
+          az containerapp update \
+            --name $(CONTAINER_APP_NAME) \
+            --container-name $(CONTAINER_APP_CONTAINER_NAME) \
+            --resource-group $(CONTAINER_APP_RESOURCE_GROUP_NAME) \
+            --image $(CONTAINER_REGISTRY_LOGIN_SERVER)/$(PROJECT_NAME_FOR_DOCKER):$(Build.BuildId)
+      env:
+        ACR_USERNAME: $(introspect2bacr-USERNAME)
+        ACR_PASSWORD: $(introspect2bacr-PASSWORD)
