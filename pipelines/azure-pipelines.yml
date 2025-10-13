@@ -177,8 +177,8 @@ stages:
   dependsOn: DeployMandatoryResources
   jobs:
   - job: Build
-    displayName: 'Build Docker Image'
-    steps:
+  displayName: 'Build Docker Image'
+  steps:
     - script: |
        echo "Current working directory: $(pwd)"
        echo "--- Listing contents of $(Build.SourcesDirectory) (Repo Root) ---"
@@ -186,6 +186,7 @@ stages:
        echo "--- Listing contents of ClaimStatus/ directory (Expected Dockerfile location) ---"
        ls -F $(Build.SourcesDirectory)/ClaimStatus/
       displayName: 'D01: Verify File Paths'
+
     - task: Docker@2
       displayName: 'Build Docker Image'
       inputs:
@@ -197,6 +198,30 @@ stages:
           $(tag)
           latest
         buildContext: $(System.DefaultWorkingDirectory)
+
+    # Install Trivy and Syft
+    - script: |
+        sudo apt-get update
+        sudo apt-get install wget apt-transport-https gnupg lsb-release
+        wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+        echo "deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -sc) main" | sudo tee -a /etc/apt/sources.list.d/trivy.list
+        sudo apt-get update
+        sudo apt-get install trivy
+        #wget -qO- https://github.com/anchore/syft/releases/latest/download/syft_1.0.1_linux_amd64.tar.gz | tar xz
+        #sudo mv syft /usr/local/bin/
+      displayName: 'Install Trivy and Syft'
+
+    # Image scanning with Trivy
+    - script: |
+        trivy image --exit-code 1 --severity CRITICAL,HIGH $(imageName)
+      displayName: 'Scan Docker Image with Trivy'
+      continueOnError: false
+
+    # Generate SBOM with Syft
+    - script: |
+        syft $(imageName) -o cyclonedx-json > sbom.json
+      displayName: 'Generate SBOM with Syft'
+
     - task: Docker@2
       displayName: 'Push Image to ACR'
       inputs:
@@ -206,38 +231,3 @@ stages:
         tags: |
           $(tag)
           latest
-
-- stage: ScanAndSBOM
-  displayName: 'Scan Image and Generate SBOM'
-  dependsOn: Build
-  jobs:
-    - job: Scan
-      displayName: 'Scan and SBOM'
-      steps:
-        - script: |
-            sudo apt-get update
-            sudo apt-get install -y wget
-            wget -qO- https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-            echo deb https://aquasecurity.github.io/trivy-repo/deb $(lsb_release -cs) main | sudo tee -a /etc/apt/sources.list.d/trivy.list
-            sudo apt-get update
-            sudo apt-get install -y trivy
-            wget -O syft.tgz https://github.com/anchore/syft/releases/latest/download/syft_linux_amd64.tar.gz
-            tar -xzf syft.tgz
-            sudo mv syft /usr/local/bin/
-          displayName: 'Install Trivy and Syft'
-
-        - script: |
-            echo $(DOCKER_PASSWORD) | docker login $(containerRegistry) -u $(DOCKER_USERNAME) --password-stdin
-          displayName: 'Login to ACR'
-          env:
-            DOCKER_USERNAME: $(dockerRegistryServiceConnection.username)
-            DOCKER_PASSWORD: $(dockerRegistryServiceConnection.password)
-
-        - script: |
-            trivy image --exit-code 1 --severity CRITICAL,HIGH $(imageName)
-          displayName: 'Scan Docker Image with Trivy'
-          continueOnError: false
-
-        - script: |
-            syft $(imageName) -o cyclonedx-json > sbom.json
-          displayName: 'Generate SBOM with Syft'

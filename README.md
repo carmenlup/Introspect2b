@@ -411,3 +411,14 @@ This section provides instructions for setting up Azure API Management (APIM) to
    - Go to the `Test` tab and select an operation to test (e.g., `GET /claims/{id}`).
    - Provide any required parameters and click `Send` to test the API.
    - Verify that you receive a successful response from the ClaimStatus API.
+
+## Documentation & learnings
+
+For further reading and learning about Azure Container Apps, Dapr, and microservices architecture, you can refer to the following resources:
+
+1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
+1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
+1. Bicep Documentation: [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
+1. Bicep learning path [Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/paths/bicep-azure-pipelines/)
+1. Log Analytics Tutorial: [Log Analytics Tutorial](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial)
+1. ARM Template Reference: [ARM Template Reference](https://learn.microsoft.com/en-us/azure/templates/)
