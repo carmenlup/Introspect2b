@@ -16,7 +16,7 @@ variables:
   containerRegistry: 'introspect2bacr.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/ClaimStatus/Dockerfile'
   tag: '$(Build.BuildId)'
-  imageName: '$(containerRegistry)/$(imageRepository):'$(Build.BuildId)'  # Full image name with tag
+  imageName: '$(containerRegistry)/$(imageRepository):$(Build.BuildId)'  # Full image name with tag
   
 
 stages:
@@ -206,38 +206,3 @@ stages:
         tags: |
           $(tag)
           latest
-
-- stage: Deploy
-  condition: false
-  displayName: 'Deploy to Azure Container Apps'
-  dependsOn: Build
-  variables:
-    containerRegistryName: 'introspect2bacr'  # Name of your Azure Container Registry
-    acaBicepFile: '$(Build.SourcesDirectory)/iac/aca-deploy.bicep'  # Path to the Bicep file
-  jobs:
-  - job: Deploy
-    displayName: 'Deploy Application'
-    steps:
-    - task: AzureCLI@2
-      displayName: 'Deploy to Azure Container Apps using Bicep'
-      inputs:
-        azureSubscription: 'azure-subscription'
-        scriptType: 'bash'
-        scriptLocation: 'inlineScript'
-        inlineScript: |
-          # Check if the ACR resource exists
-          echo "Checking if ACR resource exists: $(containerRegistry)"
-          acrExists=$(az acr show --name $(containerRegistry) --query "name" --output tsv 2>/dev/null || echo "")
-
-          if [ -n "$appExists" ]; then
-            echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
-            exit 1
-          else
-            echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
-          fi
-
-          # Deploy the application using the Bicep template
-          az deployment group create \
-            --resource-group $(resourceGroup) \
-            --template-file $(acaBicepFile) \
-            --parameters containerImage=$(imageName) location=$(location)
