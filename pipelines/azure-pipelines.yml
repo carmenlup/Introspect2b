@@ -218,9 +218,9 @@ stages:
       continueOnError: false
 
     # Generate SBOM with Syft
-    - script: |
-        syft $(imageName) -o cyclonedx-json > sbom.json
-      displayName: 'Generate SBOM with Syft'
+    # - script: |
+    #     syft $(imageName) -o cyclonedx-json > sbom.json
+    #   displayName: 'Generate SBOM with Syft'
 
     - task: Docker@2
       displayName: 'Push Image to ACR'
