@@ -1,7 +1,7 @@
 # General Overview
 
 This document outlines the step-by-step implementation of the ClaimStatus API from scratch.
-tThis include project creation, necessary implementations, and containerization using Docker.
+This include project creation, necessary implementations, and containerization using Docker.
 For simplicity, the implementation use a mocks dataset for both endpoints as follow:
 
 1. claims.json - contains a list of claims
@@ -32,12 +32,12 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
     
     ![AspDotNetCoreWebApi](Images/AspDotNetCoreWebApiProjectCreate.jpg "Create Asp.Net Core Web Api")
     - Click "Create".
-
+---
 ### 2. Clenup the WetherForecast implementation
 
 - Delete the `WeatherForecast.cs` file from the root of the project.
 - Delete the `WeatherForecastController.cs` file from the `Controllers` folder.
-
+---
 ### 3. Implement Claim controller thet contains GetClaim and SumarizeClaimNotes.
 
 #### 3.1 Create the Controllers
@@ -145,6 +145,7 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
   ]
 }
 ```
+
 #### 3.3 Create the Models
 
 - In the `ClaimStatus` project, create a new folder named `Models`.
@@ -225,10 +226,10 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
   	}
   }
   ```
-
+---
 ### 4 Add UserSecrets for secure sensitive data
 
-The implementation integrates OpenAI which will use sensitine informations to connect to OpenAi servce.
+The implementation integrates OpenAI which will use sensitive informations to connect to OpenAI service.
 For that reason we will use UserSecrets to keep sensitive info on local instead keeping them in code.
 For this do the nest steps:
 
@@ -238,13 +239,13 @@ For this do the nest steps:
 ```csharp
 builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 ```
-
+---
 ### 5. Implement the ClaimsController
 
 Open the `ClaimsController.cs` file and implement the GetClaimById and SummarizeClaimNotes endpoints as follow:
 
 ---
-### GetClaimById details
+## GetClaimById Endpoint details
 
 This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found
 
@@ -252,7 +253,7 @@ This endpoint retrieves a claim by its unique identifier. It reads from the `moc
 
 `Parameters:`
 - **Name:** `id` - The unique identifier of the claim to retrieve.
-- **Tyepe:** `integer`
+- **Type:** `integer`
 - **Mandatory:** `Yes`
 
 ### Response Types
@@ -284,7 +285,7 @@ Claim with ID 15 not found.
 Claims data set not found. Check if claim.json exist
 ```
 ---
-### SummarizeClaimNotes details
+## SummarizeClaimNotes Endpoint details
 
 This endpoint provides a summary of all notes for a claim. It reads notes from the `mocks/notes.json` file and summarizes them using OpenAI's gpt-4o-mini model.
 Implementation use the OpenAI so you need to add the `Azure.AI.OpenAI` package to the project using NuGet Package Manager or .NET CLI.
@@ -323,6 +324,7 @@ Implementation use the OpenAI so you need to add the `Azure.AI.OpenAI` package t
 Notes data not found for Claim Id 1. Check if notes.exist to path: \mocks\notes.json
 ```
 
+---
 ### 6. Add Swagger for API documentation and testing.
 
 In the `ClaimStatus` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
@@ -333,7 +335,7 @@ In the `ClaimStatus` project, add the `Swashbuckle.AspNetCore` NuGet package to 
   dotnet add package Swashbuckle.AspNetCore
   ```
 
-##### Replace code in Program.cs to configure Swagger and enable HTTPS redirection. Open `Program.cs` and replace the existing code with the following:
+#### Replace code in Program.cs to configure Swagger and enable HTTPS redirection. Open `Program.cs` and replace the existing code with the following:
 
 ```csharp
 using System.Reflection;
@@ -364,7 +366,8 @@ app.MapControllers();
 app.Run();
 
 ```
-### Application Insights Configuration
+---
+### 7. Application Insights Configuration
 The implementation include Application Insights configuration which is a powerful monitoring service provided by Azure that helps you track the performance and usage of your applications. It provides insights into application health, performance metrics, and user behavior. 
 
 To set up Application Insights, follow these steps:
@@ -384,18 +387,19 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
 });
 ```
 
-### 7. Test implementation on local machine without Docker
+### 8. Test implementation on local machine without Docker
 
 - Set `ClaimStatus` as the startup project in Visual Studio.
 - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
   ![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-### 8. Check your Logs in Application Insights
+### 9. Check your Logs in Application Insights
 - Navigate to the Azure portal and open your Application Insights resource.
 - on Overview page you can see the basic metrics like server response time, failed requests, etc and should show some activity already:
   ![AppInsightsOverview](Images/AppInsightsForClaimStatus.jpg "Application Insights Overview")
-
+---
+---
 ## Containerization and run Claims Implementation Details
 
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.

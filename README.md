@@ -112,7 +112,7 @@ It provide a secure configuration using user-secrets for local development.
    - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
    - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-\(\mathsf{\color{lime}Remark:}\): For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
+$\mathsf{\color{lime}Remark:}$: For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
 
 ---
 
@@ -146,9 +146,9 @@ It provide a secure configuration using user-secrets for local development.
    ![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
 4. Test endpoints
-   \(\mathsf{\color{lime}Remark 1:}\): Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
+   $\mathsf{\color{lime}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
-   \(\mathsf{\color{lime}Remark 2:}\): For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
+   $\mathsf{\color{lime}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 
@@ -269,6 +269,8 @@ Documentation link [Service connections](https://learn.microsoft.com/en-us/azure
 - Select the subscription and the ACR instance `introspect2bacr` created on step 2.3.
 - Use `acr-connection` for service connection name and save it.
 
+---
+---
 # 3. Deploy resource in Azure via automation
 
 This section provides instructions for deploying the ClaimStatus to Azure Container Apps (ACA) using azure pipelines.
@@ -303,7 +305,7 @@ The documentation provide also the deployment of ACR and ensure the minimal infr
 
 ---
 ---
-# 4. Establish connectivity with docker after deployment
+# 4. Establish OpenAI connectivity with docker after deployment
 After deployment in Azure conectivity between OpenAI and ACA must be configured in order to run the POST endpoint.
 ### Secrets Configuration for OpenAi in Azure ACA
 - In ACA, go to `Security` -> `Secrets` and create the next secrets:
@@ -383,7 +385,7 @@ Execute them in ACA Monitoring Logs or in Application Insights Logs to see the r
 ---
 ---
 
-# 5. Setup APIM and connect to ACA
+# 6. Setup APIM and connect to ACA
 This section provides instructions for setting up Azure API Management (APIM) to expose the ClaimStatus API deployed in Azure Container Apps (ACA).
 ## Prerequisites
 1. An Azure subscription with the necessary permissions to create and manage resources.
@@ -393,11 +395,11 @@ This section provides instructions for setting up Azure API Management (APIM) to
 1. An existing APIM instance. If you don't have one, you can create it by following the instructions in the [APIM documentation](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance).
 1. Azure DevOps setup as described in the [Azure DevOps Setup](#2-azure-devops-setup) section.
 
-## 5.1 Steps to set up APIM and connect to ACA
+## 6.1 Steps to set up APIM and connect to ACA
 1. **Create APIM Instance:** Follow the instructions in the [APIM documentation](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) to create an APIM instance in the `introspect-2-b` resource group.
 1. **Import ACA**: Follow the instructions [Import an Azure container app as an API](https://learn.microsoft.com/en-us/azure/api-management/import-container-app-with-oas)
 
-## 5.2 Test the APi's via APIM
+## 6.2 Test the APi's via APIM
 - Go to the APIM instance in the Azure portal.
 - Navigate to the `APIs` section and select the ClaimStatus API.
 - Click on the `Test` tab to test the API endpoints.

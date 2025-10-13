@@ -43,7 +43,7 @@ az group create --name introspect-2-b --location westeurope
 
 	If you have not built the Docker image yet, you can do so by running the following command solution folder (Introspect2b) and build image from there
 
-	$\mathsf{\color{orange}Reason Explained:}$: We have external folders from project folders. I order to push to docker the external app context folder we need to buid the app from Introspect2b folder which is the solution folder
+	$\mathsf{\color{orange}Explenation!}$: We have external folders from project folders. I order to push to docker the external app context folder we need to buid the app from Introspect2b folder which is the solution folder
 
 ```
 docker build -f ClaimStatus/Dockerfile -t claimstatus:latest .
@@ -99,44 +99,4 @@ Your link sould look like this:
 ```
 https://claim-status-app.delightfulmoss-58bb48c4.westeurope.azurecontainerapps.io/swagger/index.html
 ```
-- 
-
-
-
-# Test ClaimStatus in Azure
-You can test how ClimStatus AI and OpenAI are working together in Azure by invoking the POST endpoint summarize.
-In Swagger UI, go to create endpoint and create a product.
-### Example HTTP Requests for Create a Product
-```http
-POST https://<productappURL>/api/products
-Content-Type: application/json
-
-{
-  "id": 100,
-  "name": "Procuct check communication Azure",
-  "price": 1,
-  "stock": 3
-}
-```
-1. The above request creates a new product in the ProductService.
-![Create Product on Azure](Documentation/Images/ProductCreatedSwaggerjpg.jpg "Create Product on Azure")
-2. After the product is created, the ProductService will publish an event to Dapr pub/sub, which can be consumed by the OrderService 
-3. Check the logs frot both services to ensure that the event was published and consumed successfully.
-   - In the `productservice-app` logs, you should see a message indicating that a product was created and an event was published.
-
-	![ProductService Event Published](Documentation/Images/ProductPublishMeessage.jpg "ProductService Event Published")]
-
-   - In the `orderservice-app` logs, you should see a message indicating that an event was received and processed.
-
-	![OrderService Event Consumed](Documentation/Images/OrderSubscribeMeessage.jpg "OrderService Event Consumed")
-
-## Documentation & learnings
-For further reading and learning about Azure Container Apps, Dapr, and microservices architecture, you can refer to the following resources:
-1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
-1. Microsoft Dapr documentation: [Dapr Documentation](https://learn.microsoft.com/en-us/azure/container-apps/dapr-overview)
-1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
-1. Bicep Documentation: [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
-
-
-
-[Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/modules/authenticate-azure-deployment-pipeline-service-principals/1-introduction)
+- Open the link in your web browser to access the Swagger UI for the ClaimStatus API.
