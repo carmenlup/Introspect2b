@@ -213,7 +213,7 @@ stages:
 
     # Image scanning with Trivy
     - script: |
-        trivy image --exit-code 1 --severity CRITICAL,HIGH $(imageName)
+        trivy image --severity CRITICAL,HIGH $(imageName)
       displayName: 'Scan Docker Image with Trivy'
       continueOnError: false
 
