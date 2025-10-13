@@ -177,8 +177,8 @@ stages:
   dependsOn: DeployMandatoryResources
   jobs:
   - job: Build
-  displayName: 'Build Docker Image'
-  steps:
+    displayName: 'Build Docker Image'
+    steps:
     - script: |
        echo "Current working directory: $(pwd)"
        echo "--- Listing contents of $(Build.SourcesDirectory) (Repo Root) ---"

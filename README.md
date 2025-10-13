@@ -393,24 +393,22 @@ This section provides instructions for setting up Azure API Management (APIM) to
 1. An existing APIM instance. If you don't have one, you can create it by following the instructions in the [APIM documentation](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance).
 1. Azure DevOps setup as described in the [Azure DevOps Setup](#2-azure-devops-setup) section.
 
-## Steps to set up APIM and connect to ACA
-1. **Create or Use Existing APIM Instance**: If you don't have an APIM instance, create one in the `introspect-2-b` resource group in the West Europe region.
-1. **Import the ClaimStatus API into APIM**:
-   - Navigate to your APIM instance in the Azure portal.
-   - Go to the `APIs` section and click on `+ Add API`.
-   - Select `OpenAPI` and provide the URL of the Swagger definition of your ClaimStatus API or upload the Swagger file if you have it locally.
-   - Set the `Web service URL` to the URL of your ClaimStatus API in ACA.
-   - Click `Create` to import the API.
-	- **Configure API Settings**:
-		- Set the `API URL suffix` to `claimstatus`.
-		- Configure any additional settings such as authentication or rate limiting as needed.
-		- **Save** the API settings.
-3. **Test the APIM Endpoint**:
-   - Navigate to the `APIs` section in your APIM instance.
-   - Select the `claimstatus` API you just imported.
-   - Go to the `Test` tab and select an operation to test (e.g., `GET /claims/{id}`).
-   - Provide any required parameters and click `Send` to test the API.
-   - Verify that you receive a successful response from the ClaimStatus API.
+## 5.1 Steps to set up APIM and connect to ACA
+1. **Create APIM Instance:** Follow the instructions in the [APIM documentation](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance) to create an APIM instance in the `introspect-2-b` resource group.
+1. **Import ACA**: Follow the instructions [Import an Azure container app as an API](https://learn.microsoft.com/en-us/azure/api-management/import-container-app-with-oas)
+
+## 5.2 Test the APi's via APIM
+- Go to the APIM instance in the Azure portal.
+- Navigate to the `APIs` section and select the ClaimStatus API.
+- Click on the `Test` tab to test the API endpoints.
+- Test the `GET /api/Claims/{Id}` endpoint by providing a valid claim ID.
+- Test the `POST /api/Claims/{Id}/summarize` endpoint by providing a valid claim ID.
+- Verify that the responses are as expected.
+
+`GET /api/Claims/{Id}`
+![APIMGet](Documentation/Images/APIMGetClaim.jpg "APIM Get Claim")
+`POST /api/Claims/{Id}/summarize`
+![APIMPost](Documentation/Images/APIMPostNotes.jpg "APIM Post Notes")
 
 ## Documentation & learnings
 
@@ -422,3 +420,5 @@ For further reading and learning about Azure Container Apps, Dapr, and microserv
 1. Bicep learning path [Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/paths/bicep-azure-pipelines/)
 1. Log Analytics Tutorial: [Log Analytics Tutorial](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/log-analytics-tutorial)
 1. ARM Template Reference: [ARM Template Reference](https://learn.microsoft.com/en-us/azure/templates/)
+2. Azure CLI Reference: [Azure CLI Reference](https://learn.microsoft.com/en-us/cli/azure/reference-index?view=azure-cli-latest)
+1. Kusto Query Language (KQL) Documentation: [KQL Documentation](https://learn.microsoft.com/en-us/azure/data-explorer/kusto/query/)
