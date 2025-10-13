@@ -42,9 +42,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "pipelines", "pipelines", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{84AA35A6-5CF3-43F6-B2A9-68AC3B84E9F8}"
 	ProjectSection(SolutionItems) = preProject
-		ApimUsage.md = ApimUsage.md
 		Documentation\ManualDeployResourcesInAzure.md = Documentation\ManualDeployResourcesInAzure.md
 		Documentation\pipeline-test.ps1 = Documentation\pipeline-test.ps1
+		Notes.md = Notes.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
@@ -64,6 +64,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{02EA68
 		Documentation\Images\PippelineRun.jpg = Documentation\Images\PippelineRun.jpg
 		Documentation\Images\QustoQueryACA.jpg = Documentation\Images\QustoQueryACA.jpg
 		Documentation\Images\TrivyScanResult.jpg = Documentation\Images\TrivyScanResult.jpg
+		Documentation\Images\TrivyScanSuccess.jpg = Documentation\Images\TrivyScanSuccess.jpg
 	EndProjectSection
 EndProject
 Global

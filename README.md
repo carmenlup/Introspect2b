@@ -60,18 +60,7 @@ Introspect2b					# Solution folder
 ├── .env			# Environment variable file for secrets and configuration used by Docker Compose
 └── README.md			# Documentation for the solution
 ```
-
-- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - ClaimStatus/ — service source + Dockerfile.
-- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span> - mocks/claims.json, mocks/notes.json (5–8 claim records; 3–4 notes blobs).
-- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> apim/ — APIM policy files or export.
-- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>  iac/ — Bicep/Terraform templates.
-- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>- pipelines/azure-pipelines.yml — Azure DevOps pipeline.
-- <span style="color:red"><b>TBRemovedLATER - NOT Started ❗️</b></span> scans/ — link/screenshots to Defender findings
-- <span style="color:green"><b>TBRemovedLATER - OK ✅</b></span>  observability/ — saved KQL queries and sample screenshots.
-- <span style="color:orange"><b>TBRemovedLATER - IP 🖊️ </b></span> - README.md — instructions, GenAI prompts used, how to run/tests.
-
 ---
-
 ---
 
 # ClaimStatus API Documentation
@@ -83,7 +72,6 @@ It allows users to retrieve claim statuses by their unique identifiers and provi
 For more details about implementation steps, and Testing please refer to the [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md).
 
 ---
-
 ---
 
 # Local setup considerations
@@ -96,7 +84,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
-   ❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
+❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
 
 ---
 
@@ -179,6 +167,7 @@ $\mathsf{\color{lime}Remark 1:}$: For an easier maintainace and better understan
 
 $\mathsf{\color{lime}Remark 2:}$: In real project the pipeline dedicated for code buld and resources deployment are separatesd. In this demo project, for simplicity, they are in the same pipeline.
 
+---
 ## Pipeline stages
 
 ### Stage 1: **Deploy Mandatory Resources**:
@@ -205,13 +194,18 @@ Resources not included in pipeline:
 Perform the next:
 1. Build the Docker images for the ClaimStatus API
 1. Scan the images for vulnerabilities using Trivy and fail the build if `Critical` or `High` vulnerabilities are found.
-1. In case of no vulnerabilities found push the images to Azure Container Registry (ACR) Otherwise fail the build.
+1. In case of no vulnerabilities found push the images to Azure Container Registry (ACR) 
+1. Otherwise fail the build and the Push Image task is canceled.
 
-Here is an example of the Trivy scan result:
-![TrivyScanResult](Documentation/Images/TrivyScanResult.jpg "Trivy Scan Result")
+Example of the pipeline fail because of vulnerabilities found:
+![TrivyScanFail](Documentation/Images/TrivyScanResult.jpg "Trivy Scan Fail")
+
+In case no vulnerabilities found the pipeline should pass. For this example the code was change to not fail the build 
+but in real project the build should fail if vulnerabilities found.
+Example of the pipeline success because no vulnerabilities found:
+![TrivyScanSuccess](Documentation/Images/TrivyScanSuccess.jpg "Trivy Scan Success")
 
 ---
-
 ---
 
 # Deployment Process Considerations
@@ -302,8 +296,8 @@ After pipeline runs you should have the next respurces created in cloud:
 - Azure Container Environment
 
 ### 3.2 Manual Deploy
-As is mentioned in the section `Pipleline and IaC Overview` Azure Container Registy is not included in pipeline deployment.
-To deploy the ACR follow the documentation [Manual Deployment In Azure](Documentation/ManualDeployResourcesInAzure.md) and run the pipeline again to build the code and push to ACR.
+As is mentioned in the section `Pipleline and IaC Overview` Azure Container App is not included in pipeline deployment.
+To manually deploy deploy the ACA follow the documentation [Manual Deployment In Azure](Documentation/ManualDeployResourcesInAzure.md) and run the pipeline again to build the code and push to ACR.
 
 The documentation provide also the deployment of ACR and ensure the minimal infrastructure to have the ClamStatus API up and run.
 

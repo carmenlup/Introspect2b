@@ -209,7 +209,7 @@ stages:
         sudo apt-get install trivy
         #wget -qO- https://github.com/anchore/syft/releases/latest/download/syft_1.0.1_linux_amd64.tar.gz | tar xz
         #sudo mv syft /usr/local/bin/
-      displayName: 'Install Trivy and Syft'
+      displayName: 'Install Trivy'
 
     # Image scanning with Trivy
     - script: |
