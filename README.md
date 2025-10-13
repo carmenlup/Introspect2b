@@ -346,7 +346,14 @@ After deployment in Azure conectivity between OpenAI and ACA must be configured 
 	ACA Logs for `/api/Claims/1/summarize`
 	![AcaLogSumarize](Documentation/Images/ACANotesAPiLog.jpg "Logs for Sumarize api call")
 
+---
+---
 # 5. AppInsights configuration for ACA Monitoring and Observability
+
+
+
+
+## 5 Monitoring ACA with Log Analytics and Application Insights
 ACA has already Log Analytics workspace configured and connected to ACA.
 To have more insights and monitoring capabilities Application Insights must be configured and connected to ACA.
 Log Analytics will be used for infrastructure monitoring and Application Insights for application monitoring.
@@ -356,19 +363,35 @@ Log Analytics will be used for infrastructure monitoring and Application Insight
 - Set the name to `appins-claimstatus-resource`
 - Choose the Log Analytics workspace created by pipeline `workspace-intospect2b-logs` in the same resource group.
 - Create the resource.
+- Execute few calls to the API to generate some logs.
+- Check the [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md) for more details about Application Insights configuration and usage.
 
-## Use Log Analytics to query logs
-- In Azure Portal go to the Log Analytics workspace `workspace-introspect2b-logs`
-- Click on `Logs` under General section
-- Use the following KQL query to see the logs from ACA and Application Insights:
-```kql
-union AppTraces, AppRequests
-| where TimeGenerated > ago(1h)
-| order by TimeGenerated desc
-```
-- You should see the logs from both ACA and Application Insights like in immage below:
-- ![LogAnalytics](Documentation/Images/LogAnalyticsQuery.jpg "Log Analytics Query")
+- #### 5.2 Use KUSTO query Analytics to query logs from ACA and Application Insights
+Monitoring and observability is a key aspect of any application deployment. 
+All Log Services provide powerful querying capabilities to analyze and visualize logs namely Kusto Query Language (KQL).
+Kusto provides a rich set of operators and functions to filter, aggregate, and transform log data.
+Also provides predefined queries and dashboards to help you get started quickly.
+Also you can create custom queries.
+Can be lounched from both ACA and Application Insights resources from `Monitoring` -> `Logs`
 
+##### Example of predifinedKQL query to see the logs from both ACA and Application Insights:
+- In ACA go to `Settings` -> `Monitoring` -> Logs
+- filter for `Operations performance`
+- Run the query to see the logs from ACA:
+You will see the logs like in immage below:
+![ACALogs](Documentation/Images/QustoQueryACA.jpg "ACA Logs Query")
+
+##### Example of custom KQL query to see the logs from Application Insights:
+
+In observability folder you can find the next custom KQL queries in `queries.kql` file:
+1. `Get all traces and requests from the last 1 hour ordered by time desc`
+1. `Check all 404 errors in the last 24 hours ordered by time desc`
+1. `Check all 500 errors in the last 24 hours ordered by time desc`
+1. `Check all failed requests in the last 24 hours ordered by time desc`
+
+Execute them in ACA Monitoring Logs or in Application Insights Logs to see the result
+
+---
 
 # 5. Setup APIM and connect to ACA
 This section provides instructions for setting up Azure API Management (APIM) to expose the ClaimStatus API deployed in Azure Container Apps (ACA).

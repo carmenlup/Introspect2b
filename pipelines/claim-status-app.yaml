@@ -1,4 +1,5 @@
-trigger: none
+trigger:
+  none
   # branches:
   #   include:
   #     - main
@@ -37,12 +38,12 @@ stages:
               command: buildAndPush
               repository: "$(CONTAINER_REGISTRY_LOGIN_SERVER)/$(PROJECT_NAME_FOR_DOCKER)"
               dockerfile: "$(DOCKER_FILE_PATH)"
-              buildContext: '.'   # <--- Ensure this is set to the root              
+              buildContext: "." # <--- Ensure this is set to the root
               tags: |
                 $(Build.BuildId)
                 latest
               containerRegistry: "acr-connection" # Added to ensure correct connection
-              arguments: '--no-cache'
+              arguments: "--no-cache"
 
   - stage: Deploy
     displayName: Deploy to ACA
@@ -55,7 +56,7 @@ stages:
           - task: AzureCLI@2
             displayName: "Azure Login"
             inputs:
-              azureSubscription: 'azure-subscription' # Service connection name for Azure subscription
+              azureSubscription: "azure-subscription" # Service connection name for Azure subscription
               scriptType: "bash"
               scriptLocation: "inlineScript"
               inlineScript: |

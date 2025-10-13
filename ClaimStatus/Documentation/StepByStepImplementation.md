@@ -391,6 +391,11 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
   ![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
+### 8. Check your Logs in Application Insights
+- Navigate to the Azure portal and open your Application Insights resource.
+- on Overview page you can see the basic metrics like server response time, failed requests, etc and should show some activity already:
+  ![AppInsightsOverview](Images/AppInsightsForClaimStatus.jpg "Application Insights Overview")
+
 ## Containerization and run Claims Implementation Details
 
 This chapter outlines the steps to containerize the ClaimStatus API using Docker. The process includes building the Docker image, creating a self-signed certificate for HTTPS, and running the container with the necessary environment variables.

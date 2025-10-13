@@ -14,6 +14,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "observability", "observability", "{80628AE2-21FC-4242-91CF-F8F6C32F9CE1}"
 	ProjectSection(SolutionItems) = preProject
 		observability\summarize-failures.kql = observability\summarize-failures.kql
+		observability\kusto-queriess.kql = observability\kusto-queriess.kql
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apim", "apim", "{399320BF-A6E7-43DE-9B91-27EAC9570F14}"
@@ -58,6 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{02EA68
 		Documentation\Images\HttpClaimStatusAPILocal.jpg = Documentation\Images\HttpClaimStatusAPILocal.jpg
 		Documentation\Images\HttpsClaimStatusAPILocal.jpg = Documentation\Images\HttpsClaimStatusAPILocal.jpg
 		Documentation\Images\PippelineRun.jpg = Documentation\Images\PippelineRun.jpg
+		Documentation\Images\QustoQueryACA.jpg = Documentation\Images\QustoQueryACA.jpg
 	EndProjectSection
 EndProject
 Global
