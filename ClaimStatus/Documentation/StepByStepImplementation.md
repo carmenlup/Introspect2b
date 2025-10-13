@@ -364,8 +364,27 @@ app.MapControllers();
 app.Run();
 
 ```
+### Application Insights Configuration
+The implementation include Application Insights configuration which is a powerful monitoring service provided by Azure that helps you track the performance and usage of your applications. It provides insights into application health, performance metrics, and user behavior. 
 
-### 7. Test implementation on local machine
+To set up Application Insights, follow these steps:
+
+1. In the `appsettings.json` file, add the Application Insights connection string under the `ApplicationInsights` section:
+```json
+"ApplicationInsights": {
+  "ConnectionString": "your-connection-string-here"
+}
+```
+
+2. In the `Program.cs` file, configure Application Insights by adding the following code:
+```csharp
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+});
+```
+
+### 7. Test implementation on local machine without Docker
 
 - Set `ClaimStatus` as the startup project in Visual Studio.
 - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.

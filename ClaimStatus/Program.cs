@@ -30,7 +30,10 @@ builder.Services.AddSwaggerGen(c =>
     // Force Swagger 2.0 compatibility
     c.UseInlineDefinitionsForEnums(); // Optional: Helps with Swagger 2.0 compatibility
 });
-builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.AddApplicationInsightsTelemetry(options =>
+{
+    options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
+});
 
 var app = builder.Build();
 // Use CORS

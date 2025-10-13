@@ -346,94 +346,55 @@ After deployment in Azure conectivity between OpenAI and ACA must be configured 
 	ACA Logs for `/api/Claims/1/summarize`
 	![AcaLogSumarize](Documentation/Images/ACANotesAPiLog.jpg "Logs for Sumarize api call")
 
+# 5. AppInsights configuration for ACA Monitoring and Observability
+ACA has already Log Analytics workspace configured and connected to ACA.
+To have more insights and monitoring capabilities Application Insights must be configured and connected to ACA.
+Log Analytics will be used for infrastructure monitoring and Application Insights for application monitoring.
 
+#### 5.1 Create Application Insights resource
+- In Azure Portal create a new Application Insights resource in the same resource group `introspect-2-b` and West Europe region.
+- Set the name to `appins-claimstatus-resource`
+- Choose the Log Analytics workspace created by pipeline `workspace-intospect2b-logs` in the same resource group.
+- Create the resource.
 
-
-
+## Use Log Analytics to query logs
+- In Azure Portal go to the Log Analytics workspace `workspace-introspect2b-logs`
+- Click on `Logs` under General section
+- Use the following KQL query to see the logs from ACA and Application Insights:
+```kql
+union AppTraces, AppRequests
+| where TimeGenerated > ago(1h)
+| order by TimeGenerated desc
 ```
-##### 1. Deploy ProductService in ACA
-1. Go to azure portal and create a new Azure Container App.
-2. Select respurce group `introspect-1-b`
-3. Conteiner App Name: `claimstatus-app`
-4. Click on Create new environment
-	- Set the environment name to `my-container-app-env` and select the resource group `introspect-2-b`.
-	- Go to Monitoring tab and click Create New Log Analytics Workspace
-		- Set the name to `workspace-intospect2b-logs`
+- You should see the logs from both ACA and Application Insights like in immage below:
+- ![LogAnalytics](Documentation/Images/LogAnalyticsQuery.jpg "Log Analytics Query")
 
-  		![analytics workspace](Documentation/Images/ACABasicConfig.jpg "Analytics Workspace")
 
-5. In the Container tab
-    - Select the container registry `introspect1bacr.azurecr.io`
-	- Select image `claimstatus`
-	- Select tag `latest`
-	- Authentication type: `Secret`
-	- Delpoyment Stack : `.NET`
+# 5. Setup APIM and connect to ACA
+This section provides instructions for setting up Azure API Management (APIM) to expose the ClaimStatus API deployed in Azure Container Apps (ACA).
+## Prerequisites
+1. An Azure subscription with the necessary permissions to create and manage resources.
+1. An existing Azure Container App (ACA) with the ClaimStatus API deployed and running.
+1. The URL of the ClaimStatus API in ACA. You can find this in the Overview tab of your ACA resource in the Azure portal.
+1. An existing resource group named `introspect-2-b` in West Europe region to host the APIM instance.
+1. An existing APIM instance. If you don't have one, you can create it by following the instructions in the [APIM documentation](https://learn.microsoft.com/en-us/azure/api-management/get-started-create-service-instance).
+1. Azure DevOps setup as described in the [Azure DevOps Setup](#2-azure-devops-setup) section.
 
-	![contianer config](Documentation/Images/ACAContainerConfig.jpg "ContainerACR Config")
-
-6. Go to Ingress tab
-	- Enable ingress
-	- Acccept trafic from anyware
-	- Target port: `8080`
-
-	![ingress config](Documentation/Images/ACAIngressConfig.jpg "Ingress Config")
-
-7. Press Review and create, Then Create
-
-8. Check the deployment status in the Azure Portal.
-It may take a few minutes for the Container App to be created and the container to be deployed.
-After resource was deployed check your `productservice-app` Container App and make sure it is running:
-- Go to the `productservice-app` resource in Azure Portal.
-- Copy the URL from the Overview tab and replace `<productappURL>`in the link below
-```
-
-<productappURL>/swagger/index.html
-
-```
-Your link sould look like this:
-```
-
-https://productservice-app.jollypond-a6f1a425.westeurope.azurecontainerapps.io/swagger/index.html
-
-````
--
-
-```
-
-# Test communication between ProductService and OrderService using Dapr on Azure
-You can test the communication between ProductService and OrderService using Dapr by invoking the endpoints defined in the ProductService API.
-In Swagger UI, go to create endpoint and create a product.
-### Example HTTP Requests for Create a Product
-```http
-POST https://<productappURL>/api/products
-Content-Type: application/json
-
-{
-  "id": 100,
-  "name": "Procuct check communication Azure",
-  "price": 1,
-  "stock": 3
-}
-````
-
-1. The above request creates a new product in the ProductService.
-   ![Create Product on Azure](Documentation/Images/ProductCreatedSwaggerjpg.jpg "Create Product on Azure")
-2. After the product is created, the ProductService will publish an event to Dapr pub/sub, which can be consumed by the OrderService
-3. Check the logs frot both services to ensure that the event was published and consumed successfully.
-
-   - In the `productservice-app` logs, you should see a message indicating that a product was created and an event was published.
-
-   ![ProductService Event Published](Documentation/Images/ProductPublishMeessage.jpg "ProductService Event Published")]
-
-   - In the `orderservice-app` logs, you should see a message indicating that an event was received and processed.
-
-   ![OrderService Event Consumed](Documentation/Images/OrderSubscribeMeessage.jpg "OrderService Event Consumed")
-
-## Documentation & learnings
-
-For further reading and learning about Azure Container Apps, Dapr, and microservices architecture, you can refer to the following resources:
-
-1. Container apps documentation: [Azure Container Apps Documentation](https://learn.microsoft.com/en-us/azure/container-apps/)
-1. Azure Container Apps Tutorial: [Azure Container Apps Tutorial](https://youtu.be/jfYJEcDOOkI?si=ePbJMgg2l6Ru-Zna)
-1. Bicep Documentation: [Bicep Documentation](https://learn.microsoft.com/en-us/azure/azure-resource-manager/bicep/)
-1. Bicep learning path [Deploy Azure resources by using Bicep and Azure Pipelines](https://learn.microsoft.com/en-us/training/paths/bicep-azure-pipelines/)
+## Steps to set up APIM and connect to ACA
+1. **Create or Use Existing APIM Instance**: If you don't have an APIM instance, create one in the `introspect-2-b` resource group in the West Europe region.
+1. **Import the ClaimStatus API into APIM**:
+   - Navigate to your APIM instance in the Azure portal.
+   - Go to the `APIs` section and click on `+ Add API`.
+   - Select `OpenAPI` and provide the URL of the Swagger definition of your ClaimStatus API or upload the Swagger file if you have it locally.
+   - Set the `Web service URL` to the URL of your ClaimStatus API in ACA.
+   - Click `Create` to import the API.
+	- **Configure API Settings**:
+		- Set the `API URL suffix` to `claimstatus`.
+		- Configure any additional settings such as authentication or rate limiting as needed.
+		- **Save** the API settings.
+3. **Test the APIM Endpoint**:
+   - Navigate to the `APIs` section in your APIM instance.
+   - Select the `claimstatus` API you just imported.
+   - Go to the `Test` tab and select an operation to test (e.g., `GET /claims/{id}`).
+   - Provide any required parameters and click `Send` to test the API.
+   - Verify that you receive a successful response from the ClaimStatus API.

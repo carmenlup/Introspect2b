@@ -1,0 +1,5 @@
+```kusto
+AppRequests
+| where name contains "summarize"
+| where success == false
+| order by TimeGenerated desc
