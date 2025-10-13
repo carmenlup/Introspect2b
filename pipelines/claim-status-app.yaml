@@ -39,6 +39,7 @@ stages:
               buildContext: '.'   # <--- Ensure this is set to the root              
               tags: |
                 $(Build.BuildId)
+                latest
               containerRegistry: "acr-connection" # Added to ensure correct connection
               arguments: '--no-cache'
 
