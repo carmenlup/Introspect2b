@@ -1,7 +1,7 @@
-trigger:
-  branches:
-    include:
-      - master
+trigger: none
+  # branches:
+  #   include:
+  #     - master
 
 variables:
   CONTAINER_APP_CONTAINER_NAME: "claim-status-app"
