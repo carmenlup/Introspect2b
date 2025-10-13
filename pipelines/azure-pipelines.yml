@@ -217,7 +217,7 @@ stages:
         - script: |
             sudo apt-get update
             sudo apt-get install -y wget
-            wget -qO- https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.2_Linux-64bit.deb > trivy.deb
+            wget -O trivy.deb https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.2_Linux-64bit.deb
             sudo dpkg -i trivy.deb
             wget -qO- https://github.com/anchore/syft/releases/latest/download/syft_1.0.1_linux_amd64.tar.gz | tar xz
             sudo mv syft /usr/local/bin/
