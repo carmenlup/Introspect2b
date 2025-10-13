@@ -7,7 +7,7 @@ COPY ["ClaimStatus/*.csproj", "./"]
 RUN dotnet restore
 
 # Remove libpam-modules if present
-RUN apt-get remove -y libpam-modules || true
+# RUN apt-get remove -y libpam-modules || true
 
 # Copy the rest of the application files and build the application
 COPY ClaimStatus/. ./
@@ -20,7 +20,7 @@ COPY iac/. ./iac
 RUN dotnet publish -c Release /p:PublishDir="/app/publish"
 
 # Use the official ASP.NET runtime image for the final container
-FROM mcr.microsoft.com/dotnet/aspnet:8.0-distroless AS runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
 WORKDIR /app
 COPY --from=build /app/publish ./publish
 
