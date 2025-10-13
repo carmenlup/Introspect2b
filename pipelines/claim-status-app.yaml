@@ -37,6 +37,7 @@ stages:
               repository: "$(CONTAINER_REGISTRY_LOGIN_SERVER)/$(PROJECT_NAME_FOR_DOCKER)"
               dockerfile: "$(DOCKER_FILE_PATH)"
               buildContext: '.'   # <--- Ensure this is set to the root
+              arguments: '--no-cache'
               tags: |
                 $(Build.BuildId)
               containerRegistry: "acr-connection" # Added to ensure correct connection
