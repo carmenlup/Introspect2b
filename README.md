@@ -202,7 +202,13 @@ Resources not included in pipeline:
 
 ### Stage2: **Build and Push Docker Images to ACR**:
 
-Build the Docker images for the ClaimStatus API and push them to the Azure Container Registry (ACR).
+Perform the next:
+1. Build the Docker images for the ClaimStatus API
+1. Scan the images for vulnerabilities using Trivy and fail the build if `Critical` or `High` vulnerabilities are found.
+1. In case of no vulnerabilities found push the images to Azure Container Registry (ACR) Otherwise fail the build.
+
+Here is an example of the Trivy scan result:
+![TrivyScanResult](Documentation/Images/TrivyScanResult.jpg "Trivy Scan Result")
 
 ---
 

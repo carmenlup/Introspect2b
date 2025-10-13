@@ -6,6 +6,9 @@ WORKDIR /app
 COPY ["ClaimStatus/*.csproj", "./"]
 RUN dotnet restore
 
+# Remove libpam-modules if present
+RUN apt-get remove -y libpam-modules || true
+
 # Copy the rest of the application files and build the application
 COPY ClaimStatus/. ./
 
