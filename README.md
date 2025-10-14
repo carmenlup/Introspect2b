@@ -293,8 +293,8 @@ After pipeline runs you should have the next respurces created in cloud:
 - Azure Log Analytics,
 - Azure Container Environment
 
-### 3.2 Manual Deploy
-As is mentioned in the section `Pipleline and IaC Overview` Azure Container App is not included in pipeline deployment.
+### 3.3 Manual Deploy
+As is mentioned in the section [Pipleline and IaC Overview](#pipleline-and-iac-overview) Azure Container App is not included in pipeline deployment.
 To manually deploy deploy the ACA follow the documentation [Manual Deployment In Azure](Documentation/ManualDeployResourcesInAzure.md) and run the pipeline again to build the code and push to ACR.
 
 The documentation provide also the deployment of ACR and ensure the minimal infrastructure to have the ClamStatus API up and run.
