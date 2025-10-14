@@ -146,9 +146,9 @@ $\mathsf{\color{lime}Remark:}$: For details about endpoints parameters and respo
    ![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
 4. Test endpoints
-   $\mathsf{\color{lime}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
+   $\mathsf{\color{green}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
-   $\mathsf{\color{lime}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
+   $\mathsf{\color{green}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 
