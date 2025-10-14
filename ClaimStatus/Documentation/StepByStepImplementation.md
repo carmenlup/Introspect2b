@@ -33,7 +33,6 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
     ![AspDotNetCoreWebApi](Images/AspDotNetCoreWebApiProjectCreate.jpg "Create Asp.Net Core Web Api")
     - Click `Create`.
 ---
----
 ### 2. Clenup the WetherForecast implementation
 
 - Delete the `WeatherForecast.cs` file from the root of the project.
@@ -236,7 +235,7 @@ The implementation integrates OpenAI which will use sensitive informations to co
 For that reason we will use UserSecrets to keep sensitive info on local instead keeping them in code.
 For this do the nest steps:
 
-- Follow section [Run and Test the ClaimStatus API Locally Without Docker](../../Documentation/README.md#run-and-test-the-claimstatus-api-locally-without-docker) available on the `README.md` documentation
+- Follow section [Run and Test the ClaimStatus API Locally Without Docker](../../README.md#run-and-test-the-claimstatus-api-locally-without-docker) available on the `README.md` documentation
 - In the `ClaimStatus` project, open the `Program.cs` add to a new line after `var builder = WebApplication.CreateBuilder(args);` the next code:
 
 ```csharp
