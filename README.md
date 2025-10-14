@@ -7,10 +7,8 @@ providing endpoints to retrieve claim statuses and generate claim summaries usin
 
 The solution emphasizes automated CI/CD with Azure DevOps, container image security scanning, 
 and comprehensive observability through Azure Monitor and Application Insights.
-Deploy a Claim Status API in Azure Container Apps (ACA) by API Management
-(APIM). Implement: GET /claims/{id} (status) and POST /claims/{id}/summarize (calls Azure
-OpenAI to return a summary from mock notes). Secure and automate via Azure DevOps
-CI/CD with image scanning and enable observability.
+
+Documentation is provided to guide through the implementation stteps, testing, and deployment processes.
 
 
 # Architecture Overview
