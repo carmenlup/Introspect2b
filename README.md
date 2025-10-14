@@ -3,13 +3,12 @@
 The objective of this project is to design, deploy, and secure a Claim Status API as a modern, cloud-native microservice. 
 
 The API is hosted in Azure Container Apps (ACA) and exposed externally through Azure API Management (APIM), 
-providing endpoints to retrieve claim statuses and generate claim summaries using Azure OpenAI. 
+providing endpoints to retrieve claim statuses for a Claim. Also generate claim summaries for all notes of a particular claim using Azure OpenAI. 
 
 The solution emphasizes automated CI/CD with Azure DevOps, container image security scanning, 
 and comprehensive observability through Azure Monitor and Application Insights.
 
-Documentation is provided to guide through the implementation stteps, testing, and deployment processes.
-
+Documentation is provided to guide through the implementation steps, testing, and deployment processes.
 
 # Architecture Overview
 
