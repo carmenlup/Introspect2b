@@ -212,10 +212,6 @@ Example of the pipeline success because no vulnerabilities found:
 
 The deployment process involves several steps to ensure that the ClaimStatus API is properly deployed and configured in Azure Container Apps (ACA).
 
-## Description
-
-The deployment process involves the following steps:
-
 1. **Connect to Github Repository**: The source code for the ClaimStatus is hosted in a GitHub repository, which is connected to Azure DevOps for continuous integration and deployment (CI/CD).
 1. **Build and Push Docker Images to ACR**: The solution images is built and pushed to an Azure Container Registry (ACR) for secure storage and management.
 1. **Deploy to Azure Container Apps (ACA)**: The ClaimStatus API is deployed to Azure Container Apps (ACA) using Bicep templates for infrastructure as code (IaC).
