@@ -93,7 +93,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 ClaimStatus API is a simple ASP.NET Core Web API application that provides endpoints to get claim status and summarize claim notes using Azure OpenAI.
 It provide a secure configuration using user-secrets for local development.
 
-1. Setup user-secrets:
+#### 1. Setup user-secrets:
 
    - right-click on the `ClaimStatus` project in Visual Studio and select `Manage User Secrets`.
    - This will open a `secrets.json` file. Add your Azure OpenAI API key and endpoint in the following format:
@@ -107,7 +107,7 @@ It provide a secure configuration using user-secrets for local development.
    }
    ```
 
-2. Run the ClaimStatus API:
+#### 2. Run the ClaimStatus API:
    - Set `ClaimStatus` as the startup project in Visual Studio.
    - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
    - You can test the endpoints using Swagger UI or any API testing tool like Postman.
@@ -236,7 +236,7 @@ In order to automate the deployment process, we will set up a CI/CD pipeline in 
 - Go to your Azure DevOps organization and click on `New Project`.
 - Enter `introspect-2-b` name for your project  and click `Create`.
 
-Documentation link: [Create a project](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
+Documentation link: [Create a project in Azure DevOps](https://learn.microsoft.com/en-us/azure/devops/organizations/projects/create-project?view=azure-devops&tabs=preview-page)
 
 ### 2.2. Setup GitHub connection
 
@@ -256,7 +256,7 @@ This will ensure that Azure DevOps can deploy resources to your Azure subscripti
 - Select the subscription and resource group `introspect-2-b` created on step 2.2.
 - Use `azure-connection` for service connection name and save it.
 
-Documentation link [Service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
+Documentation link [Manage service connections](https://learn.microsoft.com/en-us/azure/devops/pipelines/library/service-endpoints?view=azure-devops&tabs=yaml)
 
 ### 2.4. Create secure connection to Azure Container Registry (ACR)
 

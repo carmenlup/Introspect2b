@@ -235,7 +235,7 @@ The implementation integrates OpenAI which will use sensitive informations to co
 For that reason we will use UserSecrets to keep sensitive info on local instead keeping them in code.
 For this do the nest steps:
 
-- Follow section [Run and Test the ClaimStatus API Locally Without Docker](../../README.md#run-and-test-the-claimstatus-api-locally-without-docker) available on the `README.md` documentation
+- Follow section [Setup user-secrets](../../README.md#setup-user-secrets) available on the `README.md` documentation
 - In the `ClaimStatus` project, open the `Program.cs` add to a new line after `var builder = WebApplication.CreateBuilder(args);` the next code:
 
 ```csharp
