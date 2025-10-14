@@ -112,7 +112,7 @@ It provide a secure configuration using user-secrets for local development.
    - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
    - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-$\mathsf{\color{blue}Remark:}$: For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
+$\mathsf{\color{lime}Remark:}$: For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
 
 ---
 
@@ -147,9 +147,9 @@ $\mathsf{\color{blue}Remark:}$: For details about endpoints parameters and respo
 
 4. Test endpoints
 
-   $\mathsf{\color{green}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
+   $\mathsf{\color{lime}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
-   $\mathsf{\color{blue}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
+   $\mathsf{\color{lime}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 
