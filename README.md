@@ -55,7 +55,7 @@ Introspect2b					# Solution folder
 ├── observability				# Resources for monitoring and observability
 │   ├── queries.kql
 │   └── sample-screenshots
-│       └── observability-example.png
+│       └── observability-example.png		# Included in README. Example screenshot for observability
 ├── docker-compose.yaml		# Docker Compose file for building and running containers
 ├── .env			# Environment variable file for secrets and configuration used by Docker Compose
 └── README.md			# Documentation for the solution
@@ -84,7 +84,7 @@ For more details about implementation steps, and Testing please refer to the [Cl
 4. An Azure subscription. If you don't have one, you can create a free account at [Azure Free Account](https://azure.microsoft.com/en-us/free/).
 5. An Azure OpenAI resource. You can create one with <b> `Option 1: Allow all networks` </b>by following the instructions at [Create an Azure OpenAI resource](https://learn.microsoft.com/en-us/azure/ai-foundry/openai/how-to/create-resource?pivots=web-portal).
 
-❗️ $\color{red}{Important}$: Make sure to note down the endpoint URL and API key for later use.
+❗️ $\mathsf{\color{red}Important}$: Make sure to note down the endpoint URL and API key for later use.
 
 ---
 
@@ -112,7 +112,7 @@ It provide a secure configuration using user-secrets for local development.
    - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
    - You can test the endpoints using Swagger UI or any API testing tool like Postman.
 
-$\mathsf{\color{lime}Remark:}$: For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
+$\mathsf{\color{blue}Remark:}$: For details about endpoints parameters and responses follow the the documentation [ClaimStatus API Documentation](ClaimStatus/Documentation/StepByStepImplementation.md)
 
 ---
 
@@ -146,9 +146,10 @@ $\mathsf{\color{lime}Remark:}$: For details about endpoints parameters and respo
    ![LocalHTTPS](Documentation/Images/HttpClaimStatusAPILocal.jpg "App Run in Docker Console")
 
 4. Test endpoints
+
    $\mathsf{\color{green}Remark 1:}$: Use HTTPS for testing or comment UseHttpRedirection in Program.cs to test over HTTP
 
-   $\mathsf{\color{green}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
+   $\mathsf{\color{blue}Remark 2:}$: For details about endpoints parameters and responses follow the the documentation ClaimStatus API Documentation
 
 ---
 

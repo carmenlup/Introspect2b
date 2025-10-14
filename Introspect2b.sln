@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mocks", "mocks", "{E4D46124
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "observability", "observability", "{80628AE2-21FC-4242-91CF-F8F6C32F9CE1}"
 	ProjectSection(SolutionItems) = preProject
+		observability\observability-example.jpg = observability\observability-example.jpg
 		observability\summarize-failures.kql = observability\summarize-failures.kql
 		observability\kusto-queriess.kql = observability\kusto-queriess.kql
 	EndProjectSection
