@@ -4,8 +4,8 @@ This document outlines the step-by-step implementation of the ClaimStatus API fr
 This include project creation, necessary implementations, and containerization using Docker.
 For simplicity, the implementation use a mocks dataset for both endpoints as follow:
 
-1. claims.json - contains a list of claims
-1. notes.json - contains a list of notes related to claims
+1. `claims.json` - contains a list of claims
+1. `notes.json` - contains a list of notes related to claims
 
 ## Endpoints
 
@@ -18,7 +18,7 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
 
 - If using Visual Studio:
   - Open Visual Studio -> File -> New -> Project.
-  - Select "ASP.NET Core Web Application" and click "Next".
+  - Select `ASP.NET Core Web Application` and click `Next`.
     - Set the location and solution name
     - Name the soution `Itrospect1b`
     - Name the project ClaimStatus
@@ -26,17 +26,19 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
     ![AspDotNetCoreSol](Images/AspDotNetSolutionCreate.jpg "Create c# Solution")
     - Click "Next".
   - In the next dialog, ensure the next:
-    - ".NET 8.0 (Long-term support)" is selected
+    - `.NET 8.0 (Long-term support)` is selected
     - Authentication: None
     - Ensure only HTTPS and Use controllers are checked for ASP.NET Core Web Api. We will add step by step the needed implementations
     
     ![AspDotNetCoreWebApi](Images/AspDotNetCoreWebApiProjectCreate.jpg "Create Asp.Net Core Web Api")
-    - Click "Create".
+    - Click `Create`.
+---
 ---
 ### 2. Clenup the WetherForecast implementation
 
 - Delete the `WeatherForecast.cs` file from the root of the project.
 - Delete the `WeatherForecastController.cs` file from the `Controllers` folder.
+---
 ---
 ### 3. Implement Claim controller thet contains GetClaim and SumarizeClaimNotes.
 
@@ -192,7 +194,7 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
   }
   ```
 
-  - 'Note.cs' which represents a note with the properties: Id, ClaimId, NoteText, CreatedAt.
+  - `Note.cs` which represents a note with the properties: Id, ClaimId, NoteText, CreatedAt.
 
   ```csharp
   namespace ClaimStatus.Models
@@ -227,25 +229,27 @@ For simplicity, the implementation use a mocks dataset for both endpoints as fol
   }
   ```
 ---
-### 4 Add UserSecrets for secure sensitive data
+---
+### 4. Add UserSecrets for secure sensitive data
 
 The implementation integrates OpenAI which will use sensitive informations to connect to OpenAI service.
 For that reason we will use UserSecrets to keep sensitive info on local instead keeping them in code.
 For this do the nest steps:
 
-- Follow section `Run and Test the ClaimStatus API Locally Without Docker` available on the README.md documetation
+- Follow section [Run and Test the ClaimStatus API Locally Without Docker](../../Documentation/README.md#run-and-test-the-claimstatus-api-locally-without-docker) available on the `README.md` documentation
 - In the `ClaimStatus` project, open the `Program.cs` add to a new line after `var builder = WebApplication.CreateBuilder(args);` the next code:
 
 ```csharp
 builder.Configuration.AddUserSecrets(Assembly.GetExecutingAssembly(), true);
 ```
 ---
+---
 ### 5. Implement the ClaimsController
 
 Open the `ClaimsController.cs` file and implement the GetClaimById and SummarizeClaimNotes endpoints as follow:
 
 ---
-## GetClaimById Endpoint details
+## A. GetClaimById Endpoint details
 
 This endpoint retrieves a claim by its unique identifier. It reads from the `mocks/claims.json` file and returns the claim if found
 
@@ -285,7 +289,7 @@ Claim with ID 15 not found.
 Claims data set not found. Check if claim.json exist
 ```
 ---
-## SummarizeClaimNotes Endpoint details
+## B. SummarizeClaimNotes Endpoint details
 
 This endpoint provides a summary of all notes for a claim. It reads notes from the `mocks/notes.json` file and summarizes them using OpenAI's gpt-4o-mini model.
 Implementation use the OpenAI so you need to add the `Azure.AI.OpenAI` package to the project using NuGet Package Manager or .NET CLI.
@@ -323,13 +327,13 @@ Implementation use the OpenAI so you need to add the `Azure.AI.OpenAI` package t
 ```json
 Notes data not found for Claim Id 1. Check if notes.exist to path: \mocks\notes.json
 ```
-
+---
 ---
 ### 6. Add Swagger for API documentation and testing.
 
 In the `ClaimStatus` project, add the `Swashbuckle.AspNetCore` NuGet package to enable Swagger.
 
-- If using Visual Studio, right-click on the project, select "Manage NuGet Packages", and search for `Swashbuckle.AspNetCore`.
+- If using Visual Studio, right-click on the project, select `Manage NuGet Packages`, and search for `Swashbuckle.AspNetCore`.
 - If using .NET CLI, run:
   ```powershell
   dotnet add package Swashbuckle.AspNetCore
@@ -367,6 +371,7 @@ app.Run();
 
 ```
 ---
+---
 ### 7. Application Insights Configuration
 The implementation include Application Insights configuration which is a powerful monitoring service provided by Azure that helps you track the performance and usage of your applications. It provides insights into application health, performance metrics, and user behavior. 
 
@@ -386,14 +391,14 @@ builder.Services.AddApplicationInsightsTelemetry(options =>
     options.ConnectionString = builder.Configuration["ApplicationInsights:ConnectionString"];
 });
 ```
-
+---
 ### 8. Test implementation on local machine without Docker
 
 - Set `ClaimStatus` as the startup project in Visual Studio.
 - Press `F5` to run the application. This will start the API and open Swagger UI in your default web browser.
   ![SwaggerUI](Images/SwaggerUILocal.jpg "Swagger UI")
 - You can test the endpoints using Swagger UI or any API testing tool like Postman.
-
+---
 ### 9. Check your Logs in Application Insights
 - Navigate to the Azure portal and open your Application Insights resource.
 - on Overview page you can see the basic metrics like server response time, failed requests, etc and should show some activity already:
@@ -434,7 +439,7 @@ docker run -it --rm -p 8030:8030 -p 8031:8031 `
   -v "${HOME}\.aspnet\https\localdockercert.pfx:/https/localdockercert.pfx" `
   claimstatus:latest
 ```
-
+---
 ### Accessing the ClaimStatus from Docker
 
 You can access the Order Service API at the following URL:
