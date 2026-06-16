@@ -47,38 +47,41 @@ stages:
 
           # Check if ACR exists
           acrNameExists=$(az acr show --name $(containerRegistryName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "acrNameExists" ]; then
+          if [ -n "$acrNameExists" ]; then
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
               echo "Azure Container Registry $(containerRegistryName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=acrExists;isOutput=true]false"
               echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Log Analytics exists
           logAnalyticsNameExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "logAnalyticsNameExists" ]; then
+          if [ -n "$logAnalyticsNameExists" ]; then
               echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]true"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]false"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Container Environment exists
           containerEnvNameExists=$(az containerapp env show --name $(containerEnvironmentName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "containerEnvNameExists" ]; then
+          if [ -n "$containerEnvNameExists" ]; then
               echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]true"
               echo "Container Environment $(containerEnvironmentName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]false"
               echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Container App exists
-          check if Container App exists
           containerAppNameExist=$(az containerapp show --name $(imageRepository) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "containerAppNameExist" ]; then
+          if [ -n "$containerAppNameExist" ]; then
              echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
              echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
           else
+             echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]false"
              echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
           fi
 
@@ -115,10 +118,10 @@ stages:
         inlineScript: |
           echo "Deploying Azure Container Registry $(containerRegistryName)..."
           
-          az deployment group create `
-            --resource-group $(resourceGroup) `
-            --template-file $(acrBicepFile) `
-            --parameters containerRegistryName=$(containerRegistryName) `
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(acrBicepFile) \
+            --parameters containerRegistryName=$(containerRegistryName) \
               location=$(location)
   
   - job: DeployLogAnalytics
@@ -148,7 +151,9 @@ stages:
     variables:
       containerEnvBicepFile: '$(Build.SourcesDirectory)/iac/container-environment-def.bicep'  # Path to the Bicep file
       containerEnvCheckExists: $[ dependencies.CheckResources.outputs['passOutput.containerEnvExists'] ]
-    dependsOn: DeployLogAnalytics  # Ensure this runs after Log Analytics
+    dependsOn:
+      - CheckResources     # required to read the containerEnvExists output variable
+      - DeployLogAnalytics # ensure Log Analytics exists before deploying the environment
     condition: eq(variables.containerEnvCheckExists, 'false')  # Run only if Container Environment does not exist
     steps:
     - task: AzureCLI@2
@@ -161,16 +166,15 @@ stages:
           echo "check variable containerEnvCheckExists: $(containerEnvCheckExists)"
           echo "Deploying Container Environment $(containerEnvironmentName)..."
           workspaceId=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query customerId --output tsv)
-          
+
           echo "workspace id: $workspaceId"
-          echo "workspace id from internal var ?"
           az deployment group create \
             --resource-group $(resourceGroup) \
             --template-file $(containerEnvBicepFile) \
             --parameters containerEnvironmentName=$(containerEnvironmentName) \
                 location=$(location) \
-                logAnalyticsWorkspaceName=$$(logAnalyticsWorkspaceName) \
-                logAnalyticsWorkspaceId=workspaceId 
+                logAnalyticsWorkspaceName=$(logAnalyticsWorkspaceName) \
+                logAnalyticsWorkspaceId=$workspaceId
   
 - stage: Build
   displayName: 'Build and Push Image'

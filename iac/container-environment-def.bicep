@@ -10,7 +10,7 @@ param logAnalyticsWorkspaceId string // value received from command parameters
 @description('The key of the Log Analytics workspace')
 param logAnalyticsWorkspaceName string // value received from command parameters
 
-resource logAnalyticsWorkspace 'Microsoft.ContainerRegistry/registries@2023-01-01-preview' existing = {
+resource logAnalyticsWorkspace 'Microsoft.OperationalInsights/workspaces@2023-09-01' existing = {
   name: logAnalyticsWorkspaceName
 }
 
