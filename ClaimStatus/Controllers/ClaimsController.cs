@@ -7,6 +7,7 @@ using Azure;
 using Azure.AI.OpenAI;
 using ClaimStatus.Models.Response;
 using OpenAI.Chat;
+using Microsoft.Agents.AI;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -104,6 +105,77 @@ public class ClaimsController : ControllerBase
             Recommendation = recommendation
         });
     }
+    [HttpPost("{id}/summarize/agent")]
+    public async Task<IActionResult> SummarizeClaimNotesWithAgent(int id)
+    {
+        if (id <= 0)
+        {
+            _logger.LogWarning($"Invalid claim id provided: {id}");
+            return BadRequest($"Invalid claim id provided: {id}");
+        }
+
+        var notesFilePath = Path.Combine(_mocksPath, "notes.json");
+        if (!System.IO.File.Exists(notesFilePath))
+        {
+            _logger.LogWarning($"Notes file not found at path: {notesFilePath}");
+            return NotFound($"Notes data not found for Claim Id {id}. Check if notes.exist to path: {notesFilePath}");
+        }
+
+        var notesData = JsonSerializer.Deserialize<Notes>(System.IO.File.ReadAllText(notesFilePath));
+
+        if (notesData.NoteList.Count == 0)
+        {
+            _logger.LogWarning($"No notes found for Claim ID: {id}");
+            return NotFound($"Notes for Claim ID {id} not found.");
+        }
+
+        _logger.LogInformation($"Notes found for Claim ID: {id}. Generating summary using agent...");
+
+        var (originalNotes, summary, recommendation) = await GetSummaryFromAgent(notesData.NoteList.Where(n => n.ClaimId == id));
+
+        _logger.LogInformation($"Summary and recommendation successfully generated for Claim ID: {id} (agent)");
+
+        return Ok(new
+        {
+            ClaimId = id,
+            OriginalNotes = originalNotes,
+            Summary = summary,
+            Recommendation = recommendation
+        });
+    }
+
+    private async Task<(string OriginalNotes, string Summary, string Recommendation)> GetSummaryFromAgent(IEnumerable<Note> notes)
+    {
+        var uriString = _configuration["OpenAiConfig:Endpoint"];
+        var endpoint = new Uri(uriString);
+        var deploymentName = _configuration["OpenAiConfig:DeploymentName"];
+        var apiKey = _configuration["OpenAiConfig:ApiKey"];
+
+        AzureOpenAIClient azureClient = new(
+            endpoint,
+            new AzureKeyCredential(apiKey));
+
+        // An AIAgent wraps the chat client with instructions that define its persona/behavior.
+        // It can be reused across requests and, when given tools, can decide for itself when to call them.
+        AIAgent agent = azureClient.GetChatClient(deploymentName)
+            .AsAIAgent(instructions: "You are an assistant that summarizes claim notes and provides next-step recommendations.");
+
+        var notesJson = JsonSerializer.Serialize(notes);
+
+        AgentResponse response = await agent.RunAsync(
+            $"List original content of notes: {notesJson}. Summarize the following notes. Provide a next-step recommendation. Format the response on 3 sections named 'Original Notes','Summary:','Recommendation:");
+
+        var responseContent = response.Text;
+
+        var parts = responseContent.Split("\n\n", StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
+        var originalNotes = parts.Length > 0 ? parts[0].Trim() : "No customer summary provided.";
+        var summary = parts.Length > 1 ? parts[1].Trim() : "No summary provided.";
+        var recommendation = parts.Length > 2 ? parts[2].Trim() : "No recommendation provided.";
+
+        return (originalNotes, summary, recommendation);
+    }
+
     private Task<(string OriginalNotes, string Summary, string Recommendation)> GetSummaryFromOpenAi(IEnumerable<Note> notes)
     {
         var uriString = _configuration["OpenAiConfig:Endpoint"];
