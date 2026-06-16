@@ -118,10 +118,10 @@ stages:
         inlineScript: |
           echo "Deploying Azure Container Registry $(containerRegistryName)..."
           
-          az deployment group create `
-            --resource-group $(resourceGroup) `
-            --template-file $(acrBicepFile) `
-            --parameters containerRegistryName=$(containerRegistryName) `
+          az deployment group create \
+            --resource-group $(resourceGroup) \
+            --template-file $(acrBicepFile) \
+            --parameters containerRegistryName=$(containerRegistryName) \
               location=$(location)
   
   - job: DeployLogAnalytics
