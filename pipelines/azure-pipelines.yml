@@ -47,38 +47,41 @@ stages:
 
           # Check if ACR exists
           acrNameExists=$(az acr show --name $(containerRegistryName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "acrNameExists" ]; then
+          if [ -n "$acrNameExists" ]; then
               echo "##vso[task.setvariable variable=acrExists;isOutput=true]true"
               echo "Azure Container Registry $(containerRegistryName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=acrExists;isOutput=true]false"
               echo "Azure Container Registry $(containerRegistryName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Log Analytics exists
           logAnalyticsNameExists=$(az monitor log-analytics workspace show --resource-group $(resourceGroup) --workspace-name $(logAnalyticsWorkspaceName) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "logAnalyticsNameExists" ]; then
+          if [ -n "$logAnalyticsNameExists" ]; then
               echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]true"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=logAnalyticsExists;isOutput=true]false"
               echo "Log Analytics Workspace $(logAnalyticsWorkspaceName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Container Environment exists
           containerEnvNameExists=$(az containerapp env show --name $(containerEnvironmentName) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "containerEnvNameExists" ]; then
+          if [ -n "$containerEnvNameExists" ]; then
               echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]true"
               echo "Container Environment $(containerEnvironmentName) exists. Deployment will not proceed."
           else
+              echo "##vso[task.setvariable variable=containerEnvExists;isOutput=true]false"
               echo "Container Environment $(containerEnvironmentName) does not exist. Proceeding with deployment."
           fi
 
           # Check if Container App exists
-          check if Container App exists
           containerAppNameExist=$(az containerapp show --name $(imageRepository) --resource-group $(resourceGroup) --query "name" --output tsv 2>/dev/null || echo "")
-          if [ -n "containerAppNameExist" ]; then
+          if [ -n "$containerAppNameExist" ]; then
              echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]true"
              echo "Azure Container App $(imageRepository) already exists. Deployment will not proceed."
           else
+             echo "##vso[task.setvariable variable=containerAppExist;isOutput=true]false"
              echo "Azure Container App $(imageRepository) does not exist. Proceeding with deployment."
           fi
 
